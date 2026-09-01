@@ -32,12 +32,22 @@ const firebaseConfig = {
 // ── Singleton: evita reinicialização em hot reload ─────────
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// ── Auth com persistência via AsyncStorage (React Native) ──
-export const auth = getApps().length === 1
-  ? initializeAuth(app, {
+import { Platform } from 'react-native';
+
+// ── Auth com persistência condicional (React Native vs Web) ──
+let authInstance;
+if (getApps().length === 1) {
+  if (Platform.OS === 'web') {
+    authInstance = getAuth(app);
+  } else {
+    authInstance = initializeAuth(app, {
       persistence: getReactNativePersistence(AsyncStorage),
-    })
-  : getAuth(app);
+    });
+  }
+} else {
+  authInstance = getAuth(app);
+}
+export const auth = authInstance;
 
 // ── Firestore com cache offline persistente ────────────────
 // CACHE_SIZE_UNLIMITED = sem limite de tamanho local

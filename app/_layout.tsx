@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import { onAuthChange, fetchUserProfile } from '@/services/auth.service';
 import { getUserProgress } from '@/services/progress.service';
 import { useUserStore } from '@/store/useUserStore';
+import '../global.css';
 
 export default function RootLayout() {
   const router = useRouter();
