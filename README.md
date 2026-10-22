@@ -5,14 +5,6 @@
 
 ---
 
-## 🌐 Teste o Aplicativo Online
-
-Acesse o protótipo funcional diretamente pelo navegador (desktop ou celular):
-
-👉 **[https://finedu-app-f4087.web.app](https://finedu-app-f4087.web.app)**
-
----
-
 ## ✨ Destaques do Projeto
 
 - **Roleplay Educativo:** Cenários reais do cotidiano onde cada escolha gera consequências imediatas e orientações práticas (*Dica do Guardião*).
