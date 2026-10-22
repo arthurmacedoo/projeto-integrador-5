@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     "./app/**/*.{js,jsx,ts,tsx}",
     "./components/**/*.{js,jsx,ts,tsx}",
@@ -8,42 +9,82 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Paleta principal FinEdu
+        // Paleta principal FinEdu (UI/UX PDF Design Tokens)
+        cream: {
+          DEFAULT: '#FAF8F5',
+          50: '#FFFFFF',
+          100: '#FAF8F5',
+          200: '#F3EFE6',
+          300: '#EFECE6',
+          400: '#E5E0D5',
+          500: '#D6D0C4',
+        },
+        sand: {
+          DEFAULT: '#F3EFE6',
+          light: '#FAF8F5',
+          muted: '#EFECE6',
+          border: '#E5E0D5',
+          dark: '#D6D0C4',
+        },
+        forest: {
+          DEFAULT: '#1E4631',
+          dark: '#1B4332',
+          deeper: '#132E20',
+          medium: '#2D6A4F',
+          light: '#E6F0EC',
+          accent: '#A7F3D0',
+        },
+        mint: {
+          DEFAULT: '#E6F0EC',
+          border: '#B7E4C7',
+        },
+        amber: {
+          bg: '#FEF3C7',
+          border: '#FDE68A',
+          text: '#B45309',
+          dark: '#92400E',
+          fill: '#D97706',
+        },
+        ink: {
+          DEFAULT: '#1C1917',
+          muted: '#57534E',
+          subtle: '#78716C',
+        },
         brand: {
-          50:  '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',  // azul principal
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+          50:  '#E6F0EC',
+          100: '#D1E7DD',
+          200: '#B7E4C7',
+          300: '#95D5B2',
+          400: '#52B788',
+          500: '#1E4631',  // verde escuro principal
+          600: '#1B4332',
+          700: '#163525',
+          800: '#132E20',
+          900: '#0D2016',
         },
         success: {
-          DEFAULT: '#22c55e',
-          light:   '#dcfce7',
+          DEFAULT: '#1E4631',
+          light:   '#E6F0EC',
         },
         danger: {
-          DEFAULT: '#ef4444',
-          light:   '#fee2e2',
+          DEFAULT: '#DC2626',
+          light:   '#FEE2E2',
         },
         warning: {
-          DEFAULT: '#f59e0b',
-          light:   '#fef3c7',
+          DEFAULT: '#B45309',
+          light:   '#FEF3C7',
         },
         // Níveis de gamificação
         level: {
-          1: '#78716c', // marrom — Iniciante
-          2: '#22c55e', // verde  — Aprendiz
-          3: '#3b82f6', // azul   — Consciente
-          4: '#a855f7', // roxo   — Estrategista
-          5: '#f59e0b', // dourado — Guardião Financeiro
+          1: '#78716c', // Iniciante
+          2: '#1E4631', // Aprendiz
+          3: '#2D6A4F', // Consciente
+          4: '#0F766E', // Estrategista
+          5: '#B45309', // Guardião Financeiro
         },
       },
       fontFamily: {
-        sans:  ['System'],
+        sans: ['System'],
       },
     },
   },

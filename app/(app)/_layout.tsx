@@ -1,54 +1,95 @@
 // ──────────────────────────────────────────────────────────────
 // app/(app)/_layout.tsx
-// Layout com Bottom Tab Bar — Home | Trilhas | Perfil
+// Layout com Bottom Tab Bar — Apenas 3 opções: Início | Trilhas | Perfil
 // ──────────────────────────────────────────────────────────────
-import { Tabs } from 'expo-router';
-import { Text } from 'react-native';
+import { Tabs, useSegments } from 'expo-router';
+import { View } from 'react-native';
+import {
+  TabBarIconHome,
+  TabBarIconTrails,
+  TabBarIconProfile,
+} from '@/components/ui/FinEduIcons';
 
-function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
+function TabIconPill({
+  focused,
+  children,
+}: {
+  focused: boolean;
+  children: React.ReactNode;
+}) {
   return (
-    <Text style={{ fontSize: focused ? 24 : 20, opacity: focused ? 1 : 0.5 }}>
-      {emoji}
-    </Text>
+    <View
+      style={{
+        backgroundColor: focused ? '#D9ECAE' : 'transparent',
+        borderRadius: 999,
+        paddingHorizontal: 14,
+        paddingVertical: 4,
+      }}
+      className="items-center justify-center"
+    >
+      {children}
+    </View>
   );
 }
 
 export default function AppLayout() {
+  const segments = useSegments() as string[];
+  const isLessonScreen = segments.includes('lesson');
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          backgroundColor: '#0f172a',
-          borderTopColor: '#1e293b',
-          borderTopWidth: 1,
-          height: 60,
-          paddingBottom: 8,
+        tabBarStyle: isLessonScreen
+          ? { display: 'none' }
+          : {
+              backgroundColor: '#FAF8F5',
+              borderTopColor: '#E5E0D5',
+              borderTopWidth: 1,
+              height: 68,
+              paddingTop: 6,
+              paddingBottom: 10,
+            },
+        tabBarActiveTintColor: '#1A4731',
+        tabBarInactiveTintColor: '#78716C',
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '700',
+          marginTop: 2,
         },
-        tabBarActiveTintColor: '#3b82f6',
-        tabBarInactiveTintColor: '#475569',
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="🏠" focused={focused} />,
+          title: 'Início',
+          tabBarIcon: ({ focused }) => (
+            <TabIconPill focused={focused}>
+              <TabBarIconHome color={focused ? '#1A4731' : '#78716C'} />
+            </TabIconPill>
+          ),
         }}
       />
       <Tabs.Screen
         name="trails"
         options={{
           title: 'Trilhas',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="📚" focused={focused} />,
+          tabBarIcon: ({ focused }) => (
+            <TabIconPill focused={focused}>
+              <TabBarIconTrails color={focused ? '#1A4731' : '#78716C'} />
+            </TabIconPill>
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Perfil',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="👤" focused={focused} />,
+          tabBarIcon: ({ focused }) => (
+            <TabIconPill focused={focused}>
+              <TabBarIconProfile color={focused ? '#1A4731' : '#78716C'} />
+            </TabIconPill>
+          ),
         }}
       />
     </Tabs>

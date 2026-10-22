@@ -7,18 +7,13 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "scheme": "finedu",
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0f172a"
-    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.finedu.app"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundColor": "#0f172a"
       },
       "package": "com.finedu.app",
@@ -31,7 +26,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-splash-screen",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#0f172a"
+        }
+      ],
       "expo-status-bar"
     ],
     "experiments": {
