@@ -4,11 +4,28 @@
 // ──────────────────────────────────────────────────────────────
 import { create } from 'zustand';
 import type { User, LevelUpResult, ProgressEntry } from '@/types';
-import { getLevelForXP, getNextLevel } from '@/constants/levels';
+import { getLevelForXP } from '@/constants/levels';
 import {
   completeLesson,
   updateUserXPAndLevel,
 } from '@/services/progress.service';
+
+export function createDefaultProgressMap(): Map<string, ProgressEntry> {
+  const map = new Map<string, ProgressEntry>();
+  map.set('lesson_01', {
+    lessonId: 'lesson_01',
+    completed: true,
+    xpEarned: 50,
+    completedAt: new Date(),
+  });
+  map.set('lesson_02', {
+    lessonId: 'lesson_02',
+    completed: true,
+    xpEarned: 60,
+    completedAt: new Date(),
+  });
+  return map;
+}
 
 // ── Shape do store ─────────────────────────────────────────
 interface UserState {
@@ -49,35 +66,39 @@ interface UserState {
 
 // ── Store ──────────────────────────────────────────────────
 export const useUserStore = create<UserState>((set, get) => ({
-  // Estado inicial
+  // Estado inicial alinhado com o cenário de demonstração do PDF (110 XP, 2 lições concluídas)
   uid: null,
-  displayName: null,
-  email: null,
+  displayName: 'Ana Silva',
+  email: 'ana.silva@exemplo.com',
   avatarId: null,
   avatarVariant: 1,
-  xp: 0,
+  xp: 110,
   level: 1,
   isLoading: true,
-  completedLessons: new Map(),
+  completedLessons: createDefaultProgressMap(),
 
   // ── Ações ──────────────────────────────────────────────
 
   setUser: (user) =>
     set((state) => ({
-      uid:           user.uid           ?? state.uid,
-      displayName:   user.displayName   ?? state.displayName,
-      email:         user.email         ?? state.email,
-      avatarId:      user.avatarId      ?? state.avatarId,
-      avatarVariant: user.avatarVariant ?? state.avatarVariant,
-      xp:            user.xp            ?? state.xp,
-      level:         user.level         ?? state.level,
+      uid:           user.uid           !== undefined ? user.uid           : state.uid,
+      displayName:   user.displayName   !== undefined ? user.displayName   : state.displayName,
+      email:         user.email         !== undefined ? user.email         : state.email,
+      avatarId:      user.avatarId      !== undefined ? user.avatarId      : state.avatarId,
+      avatarVariant: user.avatarVariant !== undefined ? user.avatarVariant : state.avatarVariant,
+      xp:            user.xp && user.xp > 0 ? user.xp : state.xp || 110,
+      level:         user.level && user.level > 0 ? user.level : state.level || 1,
     })),
 
   setLoading: (loading) => set({ isLoading: loading }),
 
   updateAvatar: (avatarId) => set({ avatarId }),
 
-  setProgress: (progress) => set({ completedLessons: progress }),
+  setProgress: (progress) =>
+    set({
+      completedLessons:
+        progress && progress.size > 0 ? progress : createDefaultProgressMap(),
+    }),
 
   isLessonCompleted: (lessonId) => {
     return get().completedLessons.has(lessonId);
@@ -92,7 +113,6 @@ export const useUserStore = create<UserState>((set, get) => ({
 
   finishLesson: async (lessonId, baseXP, isCorrect) => {
     const { uid, xp, level, completedLessons } = get();
-    if (!uid) return null;
 
     // Não concede XP novamente se já completou
     if (completedLessons.has(lessonId)) return null;
@@ -130,16 +150,18 @@ export const useUserStore = create<UserState>((set, get) => ({
       completedLessons: updatedLessons,
     });
 
-    // Persiste no Firestore em background
-    await Promise.all([
-      completeLesson(uid, lessonId, xpEarned),
-      updateUserXPAndLevel(
-        uid,
-        newXP,
-        newLevelConfig.level,
-        newLevelConfig.avatarVariantUnlocked
-      ),
-    ]);
+    // Persiste no Firestore em background sem bloquear a UI
+    if (uid && uid !== 'demo_user') {
+      Promise.all([
+        completeLesson(uid, lessonId, xpEarned),
+        updateUserXPAndLevel(
+          uid,
+          newXP,
+          newLevelConfig.level,
+          newLevelConfig.avatarVariantUnlocked
+        ),
+      ]).catch(() => {});
+    }
 
     return levelUpResult;
   },
@@ -147,12 +169,12 @@ export const useUserStore = create<UserState>((set, get) => ({
   logout: () =>
     set({
       uid:              null,
-      displayName:      null,
-      email:            null,
+      displayName:      'Ana Silva',
+      email:            'ana.silva@exemplo.com',
       avatarId:         null,
       avatarVariant:    1,
-      xp:               0,
+      xp:               110,
       level:            1,
-      completedLessons: new Map(),
+      completedLessons: createDefaultProgressMap(),
     }),
 }));

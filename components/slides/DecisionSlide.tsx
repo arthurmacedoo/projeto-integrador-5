@@ -1,6 +1,10 @@
+// ──────────────────────────────────────────────────────────────
 // components/slides/DecisionSlide.tsx
-import { View, Text, TouchableOpacity } from 'react-native';
+// Slide 2 de 4 · Sua decisão (Idêntico à Tela 11 do PDF FinEdu)
+// ──────────────────────────────────────────────────────────────
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import type { DecisionSlide as DecisionSlideType, DecisionOption } from '@/types';
+import { AvatarPortrait, IconCheck } from '@/components/ui/FinEduIcons';
 
 interface Props {
   slide: DecisionSlideType;
@@ -14,79 +18,90 @@ export default function DecisionSlide({
   onSelectOption,
 }: Props) {
   return (
-    <View style={{ flex: 1, justifyContent: 'center' }}>
-      {/* Título de Decisão */}
-      <View style={{
-        backgroundColor: '#3b82f620',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 8,
-        alignSelf: 'flex-start',
-        marginBottom: 12,
-      }}>
-        <Text style={{ color: '#60a5fa', fontWeight: 'bold', fontSize: 12 }}>
-          SUA VEZ DE DECIDIR 💡
-        </Text>
-      </View>
-
-      <Text style={{
-        color: '#f8fafc',
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 24,
-        lineHeight: 28,
-      }}>
+    <ScrollView
+      className="flex-1"
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ paddingBottom: 12 }}
+    >
+      {/* Pergunta Principal */}
+      <Text className="text-ink text-2xl font-extrabold leading-tight mb-3.5">
         {slide.question}
       </Text>
 
-      {/* Opções de Escolha */}
-      <View style={{ gap: 12 }}>
+      {/* Card de Resumo do Cenário com Avatar do João */}
+      <View
+        style={{ backgroundColor: '#EFECE4' }}
+        className="rounded-2xl p-3 flex-row items-center mb-4"
+      >
+        <View className="mr-3">
+          <AvatarPortrait id="joao" size={38} />
+        </View>
+        <Text className="text-ink text-xs flex-1 leading-relaxed">
+          Um fone de R$ 299 por R$ 49. Só por Pix, com prazo até as 18h.
+        </Text>
+      </View>
+
+      <Text className="text-ink-muted text-xs mb-3">
+        Escolha uma opção para continuar.
+      </Text>
+
+      {/* Lista de Opções A / B / C */}
+      <View className="gap-3">
         {slide.options.map((opt) => {
           const isSelected = selectedOptionId === opt.id;
           return (
             <TouchableOpacity
               key={opt.id}
               onPress={() => onSelectOption(opt)}
+              activeOpacity={0.85}
               style={{
-                backgroundColor: isSelected ? '#1e3a5f' : '#1e293b',
-                padding: 18,
-                borderRadius: 16,
-                borderWidth: 2,
-                borderColor: isSelected ? '#3b82f6' : '#334155',
-                flexDirection: 'row',
-                alignItems: 'center',
+                backgroundColor: isSelected ? '#EDF4E4' : '#FFFFFF',
+                borderColor: isSelected ? '#1A4731' : '#E3DFD3',
+                borderWidth: isSelected ? 2 : 1,
               }}
+              className="rounded-2xl p-4 flex-row items-start"
             >
-              <View style={{
-                width: 32,
-                height: 32,
-                borderRadius: 16,
-                backgroundColor: isSelected ? '#3b82f6' : '#0f172a',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: 14,
-              }}>
-                <Text style={{
-                  color: isSelected ? '#fff' : '#94a3b8',
-                  fontWeight: 'bold',
-                  fontSize: 14,
-                }}>
-                  {opt.id}
-                </Text>
+              {/* Indicador A/B/C ou Check */}
+              <View
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 14,
+                  backgroundColor: isSelected ? '#1A4731' : '#EFECE4',
+                }}
+                className="items-center justify-center mr-3 mt-0.5"
+              >
+                {isSelected ? (
+                  <IconCheck size={14} color="#FFFFFF" />
+                ) : (
+                  <Text className="text-ink font-extrabold text-xs">
+                    {opt.id}
+                  </Text>
+                )}
               </View>
-              <Text style={{
-                color: isSelected ? '#f8fafc' : '#cbd5e1',
-                fontSize: 15,
-                flex: 1,
-                lineHeight: 22,
-                fontWeight: isSelected ? '600' : 'normal',
-              }}>
-                {opt.text}
-              </Text>
+
+              {/* Texto da Opção */}
+              <View className="flex-1">
+                <Text
+                  className={`text-xs leading-snug ${
+                    isSelected ? 'text-ink font-extrabold' : 'text-ink font-semibold'
+                  }`}
+                >
+                  {opt.text}
+                </Text>
+                {isSelected && (
+                  <Text
+                    style={{ color: '#1A4731' }}
+                    className="text-[11px] font-bold mt-1"
+                  >
+                    Selecionada
+                  </Text>
+                )}
+              </View>
             </TouchableOpacity>
           );
         })}
       </View>
-    </View>
+    </ScrollView>
   );
 }

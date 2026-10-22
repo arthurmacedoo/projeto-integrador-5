@@ -3,15 +3,19 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background-color: #EFECE6;
+}
+
 /* Visual de App Mobile quando aberto no navegador do Computador */
 @media (min-width: 640px) {
   #root {
     max-width: 480px;
     margin: 0 auto;
     min-height: 100vh;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
-    border-left: 1px solid #334155;
-    border-right: 1px solid #334155;
-    background-color: #0f172a;
+    box-shadow: 0 0 40px rgba(28, 25, 23, 0.12);
+    border-left: 1px solid #E5E0D5;
+    border-right: 1px solid #E5E0D5;
+    background-color: #FAF8F5;
   }
 }
