@@ -1,146 +1,56 @@
-// ──────────────────────────────────────────────────────────────
 // components/slides/NarrativeSlide.tsx
-// Slide 1 de 4 · A história (Idêntico à Tela 10 do PDF FinEdu)
-// ──────────────────────────────────────────────────────────────
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import type { NarrativeSlide as NarrativeSlideType } from '@/types';
-import {
-  AvatarPortrait,
-  IconEarbuds,
-  IconClock,
-} from '@/components/ui/FinEduIcons';
 
 interface Props {
   slide: NarrativeSlideType;
-  lessonTitle?: string;
 }
 
-const CHARACTER_INFO: Record<
-  string,
-  { avatarId: string; greeting: string; bio: string }
-> = {
-  joao: {
-    avatarId: 'joao',
-    greeting: 'Este é o João.',
-    bio: '25 anos, trabalhador e de olho em um fone novo.',
-  },
-  dona_cida: {
-    avatarId: 'avatar_5',
-    greeting: 'Esta é a Dona Cida.',
-    bio: 'Mãe dedicada que usa o WhatsApp para falar com a família.',
-  },
-  carlos: {
-    avatarId: 'avatar_4',
-    greeting: 'Este é o Carlos.',
-    bio: 'Autônomo atento às oportunidades e contas do mês.',
-  },
-  assistente: {
-    avatarId: 'avatar_1',
-    greeting: 'Guia TchôEduca',
-    bio: 'Situação prática do dia a dia.',
-  },
+const CHARACTER_ICONS: Record<string, { emoji: string; name: string }> = {
+  joao:       { emoji: '🧑', name: 'João' },
+  dona_cida:  { emoji: '👩', name: 'Dona Cida' },
+  carlos:     { emoji: '🧔', name: 'Carlos' },
+  assistente: { emoji: '🛡️', name: 'Guia FinEdu' },
 };
 
-export default function NarrativeSlide({ slide, lessonTitle }: Props) {
-  const char = CHARACTER_INFO[slide.character] ?? CHARACTER_INFO.joao;
-
-  const cleanTitle = lessonTitle
-    ? lessonTitle.replace(/^\d+\.\s*/, '')
-    : 'A Promoção Imperdível';
+export default function NarrativeSlide({ slide }: Props) {
+  const char = CHARACTER_ICONS[slide.character] ?? { emoji: '💬', name: 'Cenário' };
 
   return (
-    <ScrollView
-      className="flex-1"
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ paddingBottom: 12 }}
-    >
-      {/* Título da Lição */}
-      <Text className="text-ink text-2xl font-extrabold leading-tight mb-4">
-        {cleanTitle}
-      </Text>
-
-      {/* Card de Apresentação do Personagem */}
-      <View
-        style={{ backgroundColor: '#EFECE4' }}
-        className="rounded-2xl p-3.5 flex-row items-center mb-4"
-      >
-        <View className="mr-3.5">
-          <AvatarPortrait id={char.avatarId} size={48} />
-        </View>
-        <View className="flex-1">
-          <Text className="text-ink font-extrabold text-sm mb-0.5">
-            {char.greeting}
-          </Text>
-          <Text className="text-ink-muted text-xs leading-snug">
-            {char.bio}
-          </Text>
+    <View style={{ flex: 1, justifyContent: 'center' }}>
+      {/* Balão de Personagem */}
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+        backgroundColor: '#1e293b',
+        padding: 12,
+        borderRadius: 16,
+        alignSelf: 'flex-start',
+      }}>
+        <Text style={{ fontSize: 32, marginRight: 10 }}>{char.emoji}</Text>
+        <View>
+          <Text style={{ color: '#94a3b8', fontSize: 11, fontWeight: 'bold' }}>PERSONAGEM</Text>
+          <Text style={{ color: '#f1f5f9', fontSize: 16, fontWeight: 'bold' }}>{char.name}</Text>
         </View>
       </View>
 
-      {/* Texto da História */}
-      <Text className="text-ink text-sm leading-relaxed mb-4">
-        {slide.text}
-      </Text>
-
-      {/* Card de Simulação: EXEMPLO · ANÚNCIO FICTÍCIO */}
-      <View
-        style={{
-          backgroundColor: '#FFFFFF',
-          borderColor: '#E3DFD3',
-          borderWidth: 1,
-        }}
-        className="rounded-3xl p-4 mb-4"
-      >
-        <Text className="text-ink-subtle text-[10px] font-extrabold tracking-widest uppercase mb-3">
-          EXEMPLO · ANÚNCIO FICTÍCIO
+      {/* Caixa de Texto Narrativa */}
+      <View style={{
+        backgroundColor: '#1e293b',
+        borderRadius: 20,
+        padding: 24,
+        borderWidth: 1,
+        borderColor: '#334155',
+      }}>
+        <Text style={{
+          color: '#f8fafc',
+          fontSize: 18,
+          lineHeight: 28,
+        }}>
+          {slide.text}
         </Text>
-
-        <View className="flex-row items-center mb-3">
-          <View
-            style={{ backgroundColor: '#EFECE4' }}
-            className="w-11 h-11 rounded-xl items-center justify-center mr-3"
-          >
-            <IconEarbuds size={22} color="#78716C" />
-          </View>
-          <Text className="text-ink font-extrabold text-sm flex-1 leading-snug">
-            Fone sem fio com superdesconto!
-          </Text>
-        </View>
-
-        <View className="flex-row items-baseline gap-2 mb-2.5">
-          <Text className="text-ink-subtle text-xs line-through">
-            R$ 299
-          </Text>
-          <Text className="text-ink text-2xl font-extrabold">
-            R$ 49
-          </Text>
-        </View>
-
-        <Text className="text-ink-muted text-xs leading-relaxed mb-3.5">
-          “Só até as 18h! Pague por Pix para garantir. Veja os depoimentos aqui no anúncio.”
-        </Text>
-
-        <View
-          style={{
-            backgroundColor: '#F7EED2',
-            borderColor: '#E8D49B',
-            borderWidth: 1,
-          }}
-          className="rounded-full px-3 py-1.5 self-start flex-row items-center"
-        >
-          <View className="mr-1.5">
-            <IconClock size={12} color="#8C5E14" />
-          </View>
-          <Text style={{ color: '#57534E' }} className="text-[11px] font-bold">
-            Oferta com pressa de vender
-          </Text>
-        </View>
       </View>
-
-      {/* Pergunta de Reflexão */}
-      <Text className="text-ink-muted text-xs leading-relaxed">
-        O preço chama a atenção. Mas será que essa compra é segura?
-      </Text>
-    </ScrollView>
+    </View>
   );
 }
