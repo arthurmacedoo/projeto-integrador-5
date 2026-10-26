@@ -32,8 +32,16 @@ export default function LevelUpModal({ visible, levelUpData, onDismiss }: Props)
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#F7F6F0' }}>
-        <View className="flex-1 px-6 py-8 justify-between items-center">
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: '#F7F6F0',
+          maxWidth: 480,
+          width: '100%',
+          alignSelf: 'center',
+        }}
+      >
+        <View className="flex-1 px-6 py-8 justify-between items-center w-full">
           <View className="w-full items-center mt-2">
             {/* Badge NOVO NÍVEL */}
             <View

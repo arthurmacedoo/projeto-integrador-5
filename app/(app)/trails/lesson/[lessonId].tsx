@@ -22,6 +22,7 @@ import DecisionSlide from '@/components/slides/DecisionSlide';
 import ConsequenceSlide from '@/components/slides/ConsequenceSlide';
 import XPRewardSlide from '@/components/slides/XPRewardSlide';
 import LevelUpModal from '@/components/gamification/LevelUpModal';
+import { ALL_LESSONS } from '@/constants/lessons';
 
 const FALLBACK_LESSON: Lesson = {
   id: 'lesson_03',
@@ -105,22 +106,29 @@ export default function LessonRunnerScreen() {
 
   useEffect(() => {
     async function load() {
-      if (!trailId || !lessonId || lessonId === 'lesson_03') {
-        setLesson(FALLBACK_LESSON);
+      const fallbackForId =
+        lessonId && ALL_LESSONS[lessonId]
+          ? ALL_LESSONS[lessonId]
+          : FALLBACK_LESSON;
+
+      if (!trailId || !lessonId) {
+        setLesson(fallbackForId);
         return;
       }
       try {
         const data = await Promise.race([
           getLesson(trailId, lessonId),
           new Promise<Lesson | null>((_, reject) =>
-            setTimeout(() => reject(new Error('timeout')), 1200)
+            setTimeout(() => reject(new Error('timeout')), 1500)
           ),
         ]);
-        if (data) {
+        if (data && data.slides && data.slides.length > 0) {
           setLesson(data);
+        } else {
+          setLesson(fallbackForId);
         }
       } catch {
-        setLesson({ ...FALLBACK_LESSON, id: lessonId });
+        setLesson(fallbackForId);
       } finally {
         setLoading(false);
       }
