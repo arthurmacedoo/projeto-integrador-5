@@ -1,6 +1,6 @@
 // ──────────────────────────────────────────────────────────────
 // app/(auth)/register.tsx
-// Tela de Cadastro — nome, e-mail e senha (Visual idêntico à Tela 5 do PDF FinEdu)
+// Tela de Cadastro — nome, e-mail e senha
 // ──────────────────────────────────────────────────────────────
 import { useState } from 'react';
 import {
@@ -11,202 +11,139 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Alert,
   ScrollView,
-  SafeAreaView,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 import { register } from '@/services/auth.service';
-import { useUserStore, createDefaultProgressMap } from '@/store/useUserStore';
-import {
-  FinEduBrand,
-  IconEye,
-  IconWifiOff,
-} from '@/components/ui/FinEduIcons';
 
 export default function RegisterScreen() {
-  const router = useRouter();
-  const { setUser, setProgress } = useUserStore();
-  const [name, setName]         = useState('Ana Silva');
-  const [email, setEmail]       = useState('ana.silva@exemplo.com');
-  const [password, setPassword] = useState('12345678');
-  const [showPass, setShowPass] = useState(false);
+  const [name, setName]         = useState('');
+  const [email, setEmail]       = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading]   = useState(false);
 
   async function handleRegister() {
-    const finalName = name.trim() || 'Ana Silva';
-    const finalEmail = email.trim() || 'ana.silva@exemplo.com';
-    const finalPass = password.length >= 8 ? password : '12345678';
-
-    setLoading(true);
+    if (!name.trim() || !email.trim() || !password) {
+      Alert.alert('Atenção', 'Preencha todos os campos.');
+      return;
+    }
+    if (password.length < 8) {
+      Alert.alert('Atenção', 'A senha deve ter pelo menos 8 caracteres.');
+      return;
+    }
     try {
-      await Promise.race([
-        register(finalName, finalEmail, finalPass),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('timeout')), 1500)
-        ),
-      ]);
-      setProgress(createDefaultProgressMap());
-      setUser({
-        displayName: finalName,
-        email: finalEmail,
-        xp: 110,
-        level: 1,
-      });
-      router.replace('/onboarding/avatar-select');
-    } catch {
-      setProgress(createDefaultProgressMap());
-      setUser({
-        uid: 'demo_user',
-        displayName: finalName,
-        email: finalEmail,
-        avatarId: null,
-        avatarVariant: 1,
-        xp: 110,
-        level: 1,
-      });
-      router.replace('/onboarding/avatar-select');
+      setLoading(true);
+      await register(name.trim(), email.trim(), password);
+      // Observer em _layout.tsx detecta o novo usuário e redireciona
+    } catch (err: any) {
+      const msg =
+        err.code === 'auth/email-already-in-use'
+          ? 'Este e-mail já está cadastrado.'
+          : 'Erro ao criar conta. Tente novamente.';
+      Alert.alert('Erro', msg);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F7F6F0' }}>
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: '#0f172a' }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 24 }}>
+        <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#f1f5f9', marginBottom: 6 }}>
+          Criar conta 🚀
+        </Text>
+        <Text style={{ fontSize: 14, color: '#94a3b8', marginBottom: 32 }}>
+          Comece sua jornada financeira agora
+        </Text>
+
+        {/* Campo Nome */}
+        <Text style={{ color: '#cbd5e1', marginBottom: 6, fontSize: 14 }}>Nome</Text>
+        <TextInput
+          value={name}
+          onChangeText={setName}
+          placeholder="Como podemos te chamar?"
+          placeholderTextColor="#475569"
+          autoCapitalize="words"
+          style={{
+            backgroundColor: '#1e293b',
+            borderRadius: 12,
+            padding: 14,
+            color: '#f1f5f9',
+            marginBottom: 16,
+            fontSize: 16,
+          }}
+        />
+
+        {/* Campo E-mail */}
+        <Text style={{ color: '#cbd5e1', marginBottom: 6, fontSize: 14 }}>E-mail</Text>
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          placeholder="seu@email.com"
+          placeholderTextColor="#475569"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          style={{
+            backgroundColor: '#1e293b',
+            borderRadius: 12,
+            padding: 14,
+            color: '#f1f5f9',
+            marginBottom: 16,
+            fontSize: 16,
+          }}
+        />
+
+        {/* Campo Senha */}
+        <Text style={{ color: '#cbd5e1', marginBottom: 6, fontSize: 14 }}>Senha</Text>
+        <TextInput
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Mínimo 8 caracteres"
+          placeholderTextColor="#475569"
+          secureTextEntry
+          style={{
+            backgroundColor: '#1e293b',
+            borderRadius: 12,
+            padding: 14,
+            color: '#f1f5f9',
+            marginBottom: 28,
+            fontSize: 16,
+          }}
+        />
+
+        {/* Botão Cadastrar */}
+        <TouchableOpacity
+          onPress={handleRegister}
+          disabled={loading}
+          style={{
+            backgroundColor: '#3b82f6',
+            borderRadius: 14,
+            padding: 16,
+            alignItems: 'center',
+            opacity: loading ? 0.7 : 1,
+          }}
         >
-          <View className="flex-1 px-6 pt-8 pb-8 justify-between">
-            <View>
-              {/* Barra Superior: Voltar */}
-              <TouchableOpacity
-                onPress={() => router.back()}
-                className="flex-row items-center self-start mb-5"
-              >
-                <View
-                  style={{ backgroundColor: '#EFECE4' }}
-                  className="w-8 h-8 rounded-full items-center justify-center mr-2.5"
-                >
-                  <Text className="text-ink text-sm font-bold">←</Text>
-                </View>
-                <Text className="text-ink text-xs font-bold">Criar conta</Text>
-              </TouchableOpacity>
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+              Criar conta
+            </Text>
+          )}
+        </TouchableOpacity>
 
-              {/* Logo FinEdu */}
-              <View className="mb-4">
-                <FinEduBrand size="sm" />
-              </View>
-
-              {/* Título e Subtítulo */}
-              <Text className="text-ink text-3xl font-extrabold leading-tight mb-2">
-                Um novo jeito de aprender.
-              </Text>
-              <Text className="text-ink-muted text-sm leading-relaxed mb-6">
-                Crie sua conta e comece com pequenas decisões do dia a dia.
-              </Text>
-
-              {/* Campo Nome */}
-              <Text className="text-ink text-xs font-bold mb-1.5">Nome</Text>
-              <TextInput
-                value={name}
-                onChangeText={setName}
-                placeholder="Ana Silva"
-                placeholderTextColor="#78716C"
-                autoCapitalize="words"
-                style={{ borderColor: '#E3DFD3' }}
-                className="bg-white border rounded-2xl px-4 py-3.5 text-ink text-sm mb-4"
-              />
-
-              {/* Campo E-mail */}
-              <Text className="text-ink text-xs font-bold mb-1.5">E-mail</Text>
-              <TextInput
-                value={email}
-                onChangeText={setEmail}
-                placeholder="ana.silva@exemplo.com"
-                placeholderTextColor="#78716C"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                style={{ borderColor: '#E3DFD3' }}
-                className="bg-white border rounded-2xl px-4 py-3.5 text-ink text-sm mb-4"
-              />
-
-              {/* Campo Senha */}
-              <Text className="text-ink text-xs font-bold mb-1.5">Senha</Text>
-              <View className="relative justify-center">
-                <TextInput
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder="••••••••••"
-                  placeholderTextColor="#78716C"
-                  secureTextEntry={!showPass}
-                  style={{ borderColor: '#E3DFD3' }}
-                  className="bg-white border rounded-2xl px-4 py-3.5 pr-12 text-ink text-sm"
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPass(!showPass)}
-                  className="absolute right-4 p-1"
-                >
-                  <IconEye off={showPass} size={18} color="#78716C" />
-                </TouchableOpacity>
-              </View>
-              <Text className="text-ink-subtle text-xs mt-1.5 mb-6">
-                Use pelo menos 8 caracteres.
-              </Text>
-
-              {/* Botão Criar conta */}
-              <TouchableOpacity
-                onPress={handleRegister}
-                disabled={loading}
-                activeOpacity={0.85}
-                style={{ backgroundColor: '#1A4731' }}
-                className={`w-full rounded-full py-4 px-6 flex-row items-center justify-center ${
-                  loading ? 'opacity-70' : 'opacity-100'
-                }`}
-              >
-                {loading ? (
-                  <ActivityIndicator color="#ffffff" />
-                ) : (
-                  <>
-                    <Text className="text-white font-bold text-sm mr-2">
-                      Criar conta
-                    </Text>
-                    <Text className="text-white font-bold text-sm">→</Text>
-                  </>
-                )}
-              </TouchableOpacity>
-
-              {/* Aviso de conexão */}
-              <View
-                style={{ backgroundColor: '#EFECE4' }}
-                className="rounded-2xl p-3.5 flex-row items-center mt-4"
-              >
-                <View className="mr-2.5">
-                  <IconWifiOff size={15} color="#78716C" />
-                </View>
-                <Text className="text-ink-muted text-xs flex-1">
-                  Conecte-se à internet para criar sua conta.
-                </Text>
-              </View>
-            </View>
-
-            {/* Link Já tenho conta · Entrar */}
-            <TouchableOpacity
-              onPress={() => router.push('/(auth)/login')}
-              className="mt-5 py-2 items-center justify-center flex-row"
-            >
-              <Text className="text-ink-muted text-xs">Já tenho conta · </Text>
-              <Text style={{ color: '#1A4731' }} className="text-xs font-bold">
-                Entrar
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        {/* Link Login */}
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 24 }}>
+          <Text style={{ color: '#64748b' }}>Já tem conta? </Text>
+          <Link href="/(auth)/login">
+            <Text style={{ color: '#3b82f6', fontWeight: 'bold' }}>Entrar</Text>
+          </Link>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

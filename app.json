@@ -1,19 +1,24 @@
 {
   "expo": {
-    "name": "TchôEduca",
-    "slug": "tchoeduca",
+    "name": "FinEdu",
+    "slug": "finedu",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "scheme": "finedu",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0f172a"
+    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.finedu.app"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/android-icon-foreground.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0f172a"
       },
       "package": "com.finedu.app",
@@ -26,14 +31,7 @@
     },
     "plugins": [
       "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/splash-icon.png",
-          "resizeMode": "contain",
-          "backgroundColor": "#0f172a"
-        }
-      ],
+      "expo-splash-screen",
       "expo-status-bar"
     ],
     "experiments": {
