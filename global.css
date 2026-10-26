@@ -18,4 +18,15 @@ body {
     border-right: 1px solid #E5E0D5;
     background-color: #FAF8F5;
   }
+
+  /* Garante que modais (como o LevelUpModal) fiquem emoldurados no container de celular no desktop */
+  div[data-testid="root"] > div:has([role="dialog"]),
+  div:has(> [role="dialog"]),
+  [role="dialog"] {
+    max-width: 480px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
 }
