@@ -19,7 +19,7 @@ const STEPS = [
     eyebrow: 'APRENDA PARA A VIDA',
     title: 'Seu dinheiro merece boas escolhas.',
     description:
-      'No FinEdu, você aprende com histórias do dia a dia. Sem complicar, no seu ritmo.',
+      'No TchôEduca, você aprende com histórias do dia a dia cuiabano. Sem complicar, no seu ritmo.',
     ctaLabel: 'Próximo',
     showSkip: true,
   },
