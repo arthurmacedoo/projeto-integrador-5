@@ -36,7 +36,7 @@ const CHARACTER_INFO: Record<
   },
   assistente: {
     avatarId: 'avatar_1',
-    greeting: 'Guia FinEdu',
+    greeting: 'Guia TchôEduca',
     bio: 'Situação prática do dia a dia.',
   },
 };

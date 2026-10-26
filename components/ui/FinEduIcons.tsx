@@ -14,37 +14,76 @@ const Polyline = 'polyline' as any;
 const G = 'g' as any;
 const Ellipse = 'ellipse' as any;
 
-// ── 1. LOGO FINEDU ( Quadrado verde escuro + livro/broto + texto ) ──
+// ── 1. LOGO TCHÔEDUCA ( Emblema cuiabano elegante com folha de pequi/broto + tipografia viva ) ──
 export function FinEduBrand({ size = 'md' }: { size?: 'sm' | 'md' }) {
-  const boxSize = size === 'sm' ? 28 : 32;
-  const iconSize = size === 'sm' ? 16 : 18;
+  const boxSize = size === 'sm' ? 32 : 36;
+  const iconSize = size === 'sm' ? 18 : 22;
   return (
     <View className="flex-row items-center">
       <View
-        style={{ width: boxSize, height: boxSize, borderRadius: 9, backgroundColor: '#1A4731' }}
+        style={{
+          width: boxSize,
+          height: boxSize,
+          borderRadius: 11,
+          backgroundColor: '#1A4731',
+          shadowColor: '#1A4731',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.15,
+          shadowRadius: 4,
+          elevation: 2,
+        }}
         className="items-center justify-center mr-2.5"
       >
         <Svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none">
+          {/* Folha / Broto educativo com arco de proteção (estilo regional Cuiabá) */}
           <Path
-            d="M2 6s3-2 10-2 10 2 10 2v14s-3-2-10-2-10 2-10 2V6z"
+            d="M12 3C7 3 3 7.5 3 13c0 4.5 3.5 8 9 8 5.5 0 9-3.5 9-8 0-5.5-4-10-9-10z"
+            stroke="#D9ECAE"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+          <Path
+            d="M12 7c0 3.5-2 6-5 6"
             stroke="#D9ECAE"
             strokeWidth="2"
             strokeLinecap="round"
-            strokeLinejoin="round"
           />
           <Path
-            d="M12 4v16"
+            d="M12 11c1.5 2 3.5 3 6 3"
+            stroke="#F7B238"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <Path
+            d="M12 7v10"
             stroke="#D9ECAE"
             strokeWidth="2"
             strokeLinecap="round"
           />
         </Svg>
       </View>
-      <Text
-        style={{ color: '#1A4731', fontSize: size === 'sm' ? 18 : 20, fontWeight: '800' }}
-      >
-        FinEdu
-      </Text>
+      <View className="flex-row items-baseline">
+        <Text
+          style={{
+            color: '#1A4731',
+            fontSize: size === 'sm' ? 20 : 22,
+            fontWeight: '900',
+            letterSpacing: -0.5,
+          }}
+        >
+          Tchô
+        </Text>
+        <Text
+          style={{
+            color: '#256C49',
+            fontSize: size === 'sm' ? 20 : 22,
+            fontWeight: '600',
+            letterSpacing: -0.5,
+          }}
+        >
+          Educa
+        </Text>
+      </View>
     </View>
   );
 }

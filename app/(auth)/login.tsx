@@ -174,7 +174,7 @@ export default function LoginScreen() {
             {/* Rodapé: Criar conta */}
             <View className="mt-8 pt-5 border-t border-sand-border">
               <Text className="text-ink-muted text-xs text-center mb-3">
-                É sua primeira vez no FinEdu?
+                É sua primeira vez no TchôEduca?
               </Text>
               <TouchableOpacity
                 onPress={() => router.push('/(auth)/register')}
