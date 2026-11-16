@@ -1,6 +1,8 @@
 // app/(app)/trails/lesson/[lessonId].tsx
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+// Área segura (notch/barra de status) em Android e iOS; o SafeAreaView do react-native só funcionava no iOS
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { getLesson } from '@/services/trail.service';
 import { useUserStore } from '@/store/useUserStore';
@@ -11,11 +13,13 @@ import DecisionSlide from '@/components/slides/DecisionSlide';
 import ConsequenceSlide from '@/components/slides/ConsequenceSlide';
 import XPRewardSlide from '@/components/slides/XPRewardSlide';
 import LevelUpModal from '@/components/gamification/LevelUpModal';
+import { useAppTheme } from '@/constants/theme';
 
 export default function LessonRunnerScreen() {
   const { trailId, lessonId } = useLocalSearchParams<{ trailId: string; lessonId: string }>();
   const router = useRouter();
   const { finishLesson } = useUserStore();
+  const { colors, fontSize, highContrast } = useAppTheme();
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
@@ -44,8 +48,8 @@ export default function LessonRunnerScreen() {
 
   if (loading || !lesson) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#0f172a', justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#3b82f6" />
+      <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={colors.primary} accessibilityLabel="Carregando lição" />
       </View>
     );
   }
@@ -98,26 +102,39 @@ export default function LessonRunnerScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#0f172a' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ flex: 1, padding: 24 }}>
 
         {/* Barra Superior com Progresso do Slide */}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, marginTop: 10 }}>
-          <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 14 }}>
-            <Text style={{ color: '#94a3b8', fontSize: 18 }}>✕</Text>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Sair da lição"
+            hitSlop={12}
+            style={{ marginRight: 14, minWidth: 48, minHeight: 48, justifyContent: 'center', alignItems: 'center' }}
+          >
+            <Text style={{ color: colors.textMuted, fontSize: 22 }}>✕</Text>
           </TouchableOpacity>
-          <View style={{ flex: 1, backgroundColor: '#1e293b', height: 6, borderRadius: 99, overflow: 'hidden' }}>
+          <View
+            accessible
+            accessibilityRole="progressbar"
+            accessibilityLabel={`Slide ${slideIndex + 1} de ${activeSlides.length}`}
+            style={{ flex: 1, backgroundColor: colors.surface, height: 6, borderRadius: 99, overflow: 'hidden', borderWidth: highContrast ? 1 : 0, borderColor: colors.border }}
+          >
             <View style={{
               width: `${Math.round(((slideIndex + 1) / activeSlides.length) * 100)}%`,
               height: '100%',
-              backgroundColor: '#3b82f6',
+              backgroundColor: colors.primary,
               borderRadius: 99,
             }} />
           </View>
         </View>
 
-        {/* Renderizador de Slides Dinâmico */}
-        <View style={{ flex: 1 }}>
+        {/* Renderizador de Slides Dinâmico
+            key={slideIndex} força recriar o slide a cada avanço — assim a leitura
+            em voz alta do slide anterior para e a do novo começa do zero. */}
+        <ScrollView key={slideIndex} style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
           {currentSlide.type === 'narrative' && (
             <NarrativeSlide slide={currentSlide} />
           )}
@@ -137,15 +154,20 @@ export default function LessonRunnerScreen() {
           {currentSlide.type === 'xp_reward' && (
             <XPRewardSlide xpEarned={xpEarned} isCorrect={isCorrect} />
           )}
-        </View>
+        </ScrollView>
 
         {/* Botão de Avanço */}
         <TouchableOpacity
           onPress={handleNext}
           disabled={(currentSlide.type === 'decision' && !selectedOption) || finishing}
+          accessibilityRole="button"
+          accessibilityLabel={isLastSlide ? 'Finalizar lição' : 'Continuar'}
+          accessibilityHint={currentSlide.type === 'decision' && !selectedOption ? 'Escolha uma opção primeiro' : undefined}
+          accessibilityState={{ disabled: (currentSlide.type === 'decision' && !selectedOption) || finishing }}
+          aria-disabled={(currentSlide.type === 'decision' && !selectedOption) || finishing}
           style={{
             backgroundColor:
-              currentSlide.type === 'decision' && !selectedOption ? '#1e293b' : '#3b82f6',
+              currentSlide.type === 'decision' && !selectedOption ? colors.surface : colors.primary,
             borderRadius: 16,
             paddingVertical: 18,
             alignItems: 'center',
@@ -154,9 +176,9 @@ export default function LessonRunnerScreen() {
           }}
         >
           {finishing ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={colors.onPrimary} />
           ) : (
-            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+            <Text maxFontSizeMultiplier={1.4} style={{ color: colors.onPrimary, fontWeight: 'bold', fontSize: fontSize('body') }}>
               {isLastSlide ? 'Finalizar Lição 🏆' : 'Continuar ➔'}
             </Text>
           )}

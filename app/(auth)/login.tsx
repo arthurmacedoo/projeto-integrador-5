@@ -11,12 +11,14 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from 'react-native';
 import { Link } from 'expo-router';
 import { login } from '@/services/auth.service';
+import { useAppTheme } from '@/constants/theme';
+import { showAlert } from '@/utils/alert';
 
 export default function LoginScreen() {
+  const { colors, fs, highContrast } = useAppTheme();
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading]   = useState(false);
@@ -24,7 +26,7 @@ export default function LoginScreen() {
 
   async function handleLogin() {
     if (!email.trim() || !password) {
-      Alert.alert('Atenção', 'Preencha e-mail e senha.');
+      showAlert('Atenção', 'Preencha e-mail e senha.');
       return;
     }
     try {
@@ -36,7 +38,7 @@ export default function LoginScreen() {
         err.code === 'auth/invalid-credential'
           ? 'E-mail ou senha incorretos.'
           : 'Erro ao fazer login. Tente novamente.';
-      Alert.alert('Erro', msg);
+      showAlert('Erro', msg);
     } finally {
       setLoading(false);
     }
@@ -44,60 +46,62 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: '#0f172a' }}
+      style={{ flex: 1, backgroundColor: colors.background }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
         {/* Logo / Título */}
-        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#3b82f6', marginBottom: 8 }}>
+        <Text style={{ fontSize: fs(36), fontWeight: 'bold', color: colors.primary, marginBottom: 8 }}>
           💰 FinEdu
         </Text>
-        <Text style={{ fontSize: 16, color: '#94a3b8', marginBottom: 40 }}>
+        <Text style={{ fontSize: fs(16), color: colors.textMuted, marginBottom: 40 }}>
           Educação Financeira Gamificada
         </Text>
 
         {/* Campo E-mail */}
-        <Text style={{ color: '#cbd5e1', marginBottom: 6, fontSize: 14 }}>E-mail</Text>
+        <Text style={{ color: colors.textSoft, marginBottom: 6, fontSize: fs(14) }}>E-mail</Text>
         <TextInput
           value={email}
           onChangeText={setEmail}
           placeholder="seu@email.com"
-          placeholderTextColor="#475569"
+          placeholderTextColor={colors.textFaint}
           keyboardType="email-address"
           autoCapitalize="none"
           style={{
-            backgroundColor: '#1e293b',
+            backgroundColor: colors.surface,
+            ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
             borderRadius: 12,
             padding: 14,
-            color: '#f1f5f9',
+            color: colors.textStrong,
             marginBottom: 16,
-            fontSize: 16,
+            fontSize: fs(16),
           }}
         />
 
         {/* Campo Senha */}
-        <Text style={{ color: '#cbd5e1', marginBottom: 6, fontSize: 14 }}>Senha</Text>
+        <Text style={{ color: colors.textSoft, marginBottom: 6, fontSize: fs(14) }}>Senha</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 28 }}>
           <TextInput
             value={password}
             onChangeText={setPassword}
             placeholder="Mínimo 8 caracteres"
-            placeholderTextColor="#475569"
+            placeholderTextColor={colors.textFaint}
             secureTextEntry={!showPass}
             style={{
               flex: 1,
-              backgroundColor: '#1e293b',
+              backgroundColor: colors.surface,
+              ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
               borderRadius: 12,
               padding: 14,
-              color: '#f1f5f9',
-              fontSize: 16,
+              color: colors.textStrong,
+              fontSize: fs(16),
             }}
           />
           <TouchableOpacity
             onPress={() => setShowPass(!showPass)}
             style={{ position: 'absolute', right: 14 }}
           >
-            <Text style={{ color: '#64748b', fontSize: 18 }}>
+            <Text style={{ color: colors.textSubtle, fontSize: fs(18) }}>
               {showPass ? '🙈' : '👁️'}
             </Text>
           </TouchableOpacity>
@@ -108,7 +112,7 @@ export default function LoginScreen() {
           onPress={handleLogin}
           disabled={loading}
           style={{
-            backgroundColor: '#3b82f6',
+            backgroundColor: colors.primary,
             borderRadius: 14,
             padding: 16,
             alignItems: 'center',
@@ -116,9 +120,9 @@ export default function LoginScreen() {
           }}
         >
           {loading ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={colors.onPrimary} />
           ) : (
-            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+            <Text style={{ color: colors.onPrimary, fontWeight: 'bold', fontSize: fs(16) }}>
               Entrar
             </Text>
           )}
@@ -126,9 +130,9 @@ export default function LoginScreen() {
 
         {/* Link Cadastro */}
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 24 }}>
-          <Text style={{ color: '#64748b' }}>Não tem conta? </Text>
+          <Text style={{ color: colors.textSubtle, fontSize: fs(14) }}>Não tem conta? </Text>
           <Link href="/(auth)/register">
-            <Text style={{ color: '#3b82f6', fontWeight: 'bold' }}>Cadastre-se</Text>
+            <Text style={{ color: colors.primaryText, fontWeight: 'bold', fontSize: fs(14) }}>Cadastre-se</Text>
           </Link>
         </View>
       </View>

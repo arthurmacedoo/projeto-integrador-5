@@ -5,8 +5,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { getLessonsForTrail } from '@/services/trail.service';
 import { useUserStore } from '@/store/useUserStore';
 import type { LessonSummary } from '@/types';
+import { useAppTheme } from '@/constants/theme';
 
 export default function TrailDetailScreen() {
+  const { colors, fs, highContrast } = useAppTheme();
   const { trailId } = useLocalSearchParams<{ trailId: string }>();
   const router = useRouter();
   const { isLessonCompleted } = useUserStore();
@@ -31,8 +33,8 @@ export default function TrailDetailScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#0f172a', justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#3b82f6" />
+      <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -41,45 +43,46 @@ export default function TrailDetailScreen() {
   const progressPercent = lessons.length > 0 ? Math.round((completedCount / lessons.length) * 100) : 0;
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#0f172a' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ padding: 24, paddingTop: 56 }}>
         {/* Voltar */}
         <TouchableOpacity
           onPress={() => router.back()}
           style={{ marginBottom: 16 }}
         >
-          <Text style={{ color: '#38bdf8', fontSize: 14, fontWeight: '600' }}>
+          <Text style={{ color: colors.accentText, fontSize: fs(14), fontWeight: '600' }}>
             ← Voltar para Trilhas
           </Text>
         </TouchableOpacity>
 
         {/* Header da Trilha */}
-        <Text style={{ color: '#f8fafc', fontSize: 26, fontWeight: 'bold', marginBottom: 6 }}>
+        <Text style={{ color: colors.text, fontSize: fs(26), fontWeight: 'bold', marginBottom: 6 }}>
           Golpes Pix e WhatsApp
         </Text>
-        <Text style={{ color: '#94a3b8', fontSize: 14, marginBottom: 20 }}>
+        <Text style={{ color: colors.textMuted, fontSize: fs(14), marginBottom: 20 }}>
           8 lições interativas baseadas em casos reais da Baixada Cuiabana
         </Text>
 
         {/* Card de Progresso */}
         <View style={{
-          backgroundColor: '#1e293b',
+          backgroundColor: colors.surface,
+          ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
           borderRadius: 16,
           padding: 16,
           marginBottom: 24,
           borderWidth: 1,
-          borderColor: '#334155',
+          borderColor: colors.border,
         }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
-            <Text style={{ color: '#cbd5e1', fontSize: 13, fontWeight: '600' }}>
+            <Text style={{ color: colors.textSoft, fontSize: fs(13), fontWeight: '600' }}>
               Progresso da Trilha
             </Text>
-            <Text style={{ color: '#3b82f6', fontSize: 13, fontWeight: 'bold' }}>
+            <Text style={{ color: colors.primary, fontSize: fs(13), fontWeight: 'bold' }}>
               {completedCount}/{lessons.length} Concluídas ({progressPercent}%)
             </Text>
           </View>
           <View style={{
-            backgroundColor: '#0f172a',
+            backgroundColor: colors.background,
             borderRadius: 99,
             height: 8,
             overflow: 'hidden',
@@ -87,14 +90,14 @@ export default function TrailDetailScreen() {
             <View style={{
               width: `${progressPercent}%`,
               height: '100%',
-              backgroundColor: '#3b82f6',
+              backgroundColor: colors.primary,
               borderRadius: 99,
             }} />
           </View>
         </View>
 
         {/* Lista de Lições */}
-        <Text style={{ color: '#64748b', fontSize: 12, fontWeight: 'bold', marginBottom: 12 }}>
+        <Text style={{ color: colors.textSubtle, fontSize: fs(12), fontWeight: 'bold', marginBottom: 12 }}>
           LIÇÕES DISPONÍVEIS
         </Text>
 
@@ -115,11 +118,11 @@ export default function TrailDetailScreen() {
                   } as any);
                 }}
                 style={{
-                  backgroundColor: isCompleted ? '#064e3b20' : isUnlocked ? '#1e293b' : '#0f172a',
+                  backgroundColor: isCompleted ? colors.successSoftDeep : isUnlocked ? colors.surface : colors.background,
                   borderRadius: 16,
                   padding: 16,
                   borderWidth: 1,
-                  borderColor: isCompleted ? '#059669' : isUnlocked ? '#3b82f660' : '#1e293b',
+                  borderColor: isCompleted ? colors.successDeep : isUnlocked ? colors.primaryBorder : (highContrast ? colors.border : colors.surface),
                   flexDirection: 'row',
                   alignItems: 'center',
                   opacity: isUnlocked ? 1 : 0.5,
@@ -130,12 +133,12 @@ export default function TrailDetailScreen() {
                   width: 40,
                   height: 40,
                   borderRadius: 20,
-                  backgroundColor: isCompleted ? '#05966920' : isUnlocked ? '#1e3a5f' : '#1e293b',
+                  backgroundColor: isCompleted ? colors.successSoft : isUnlocked ? colors.surfaceSelected : colors.surface,
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginRight: 14,
                 }}>
-                  <Text style={{ fontSize: 18 }}>
+                  <Text style={{ fontSize: fs(18) }}>
                     {isCompleted ? '✅' : isUnlocked ? '▶️' : '🔒'}
                   </Text>
                 </View>
@@ -143,26 +146,26 @@ export default function TrailDetailScreen() {
                 {/* Conteúdo */}
                 <View style={{ flex: 1 }}>
                   <Text style={{
-                    color: isUnlocked ? '#f8fafc' : '#64748b',
-                    fontSize: 15,
+                    color: isUnlocked ? colors.text : colors.textSubtle,
+                    fontSize: fs(15),
                     fontWeight: 'bold',
                     marginBottom: 2,
                   }}>
                     {lesson.title}
                   </Text>
-                  <Text style={{ color: '#f59e0b', fontSize: 12, fontWeight: '600' }}>
+                  <Text style={{ color: colors.warningBase, fontSize: fs(12), fontWeight: '600' }}>
                     +{lesson.xpReward} XP
                   </Text>
                 </View>
 
                 {isCompleted && (
                   <View style={{
-                    backgroundColor: '#059669',
+                    backgroundColor: colors.successDeep,
                     paddingHorizontal: 8,
                     paddingVertical: 4,
                     borderRadius: 8,
                   }}>
-                    <Text style={{ color: '#fff', fontSize: 11, fontWeight: 'bold' }}>Feito</Text>
+                    <Text style={{ color: colors.onPrimary, fontSize: fs(11), fontWeight: 'bold' }}>Feito</Text>
                   </View>
                 )}
               </TouchableOpacity>

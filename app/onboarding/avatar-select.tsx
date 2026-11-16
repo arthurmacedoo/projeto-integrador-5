@@ -9,10 +9,11 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import { updateAvatar as updateAvatarService } from '@/services/auth.service';
 import { useUserStore } from '@/store/useUserStore';
+import { useAppTheme } from '@/constants/theme';
+import { showAlert } from '@/utils/alert';
 
 const AVATARS = [
   { id: 'avatar_1', emoji: '🧑', label: 'Lucas'  },
@@ -24,6 +25,7 @@ const AVATARS = [
 ];
 
 export default function AvatarSelectScreen() {
+  const { colors, fs, highContrast } = useAppTheme();
   const { uid, updateAvatar } = useUserStore();
   const [selected, setSelected] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -35,18 +37,18 @@ export default function AvatarSelectScreen() {
       await updateAvatarService(uid, selected);
       updateAvatar(selected); // atualiza store → _layout.tsx redireciona para Home
     } catch {
-      Alert.alert('Erro', 'Não foi possível salvar o avatar. Tente novamente.');
+      showAlert('Erro', 'Não foi possível salvar o avatar. Tente novamente.');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#0f172a', padding: 24, paddingTop: 56 }}>
-      <Text style={{ color: '#f1f5f9', fontSize: 26, fontWeight: 'bold', marginBottom: 8 }}>
+    <View style={{ flex: 1, backgroundColor: colors.background, padding: 24, paddingTop: 56 }}>
+      <Text style={{ color: colors.textStrong, fontSize: fs(26), fontWeight: 'bold', marginBottom: 8 }}>
         Escolha seu avatar 🎭
       </Text>
-      <Text style={{ color: '#94a3b8', fontSize: 14, marginBottom: 32 }}>
+      <Text style={{ color: colors.textMuted, fontSize: fs(14), marginBottom: 32 }}>
         Ele vai evoluir conforme você aprende!
       </Text>
 
@@ -64,16 +66,16 @@ export default function AvatarSelectScreen() {
               style={{
                 flex: 1,
                 aspectRatio: 1,
-                backgroundColor: isSelected ? '#1e3a5f' : '#1e293b',
+                backgroundColor: isSelected ? colors.surfaceSelected : colors.surface,
                 borderRadius: 16,
                 borderWidth: 2,
-                borderColor: isSelected ? '#3b82f6' : 'transparent',
+                borderColor: isSelected ? colors.primary : 'transparent',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
             >
-              <Text style={{ fontSize: 40, marginBottom: 6 }}>{item.emoji}</Text>
-              <Text style={{ color: isSelected ? '#3b82f6' : '#94a3b8', fontSize: 13 }}>
+              <Text style={{ fontSize: fs(40), marginBottom: 6 }}>{item.emoji}</Text>
+              <Text style={{ color: isSelected ? colors.primary : colors.textMuted, fontSize: fs(13) }}>
                 {item.label}
               </Text>
             </TouchableOpacity>
@@ -85,7 +87,7 @@ export default function AvatarSelectScreen() {
         onPress={handleConfirm}
         disabled={!selected || loading}
         style={{
-          backgroundColor: selected ? '#3b82f6' : '#1e293b',
+          backgroundColor: selected ? colors.primary : colors.surface,
           borderRadius: 14,
           padding: 16,
           alignItems: 'center',
@@ -94,9 +96,9 @@ export default function AvatarSelectScreen() {
         }}
       >
         {loading ? (
-          <ActivityIndicator color="#fff" />
+          <ActivityIndicator color={colors.onPrimary} />
         ) : (
-          <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+          <Text style={{ color: colors.onPrimary, fontWeight: 'bold', fontSize: fs(16) }}>
             {selected ? 'Confirmar escolha' : 'Selecione um avatar'}
           </Text>
         )}

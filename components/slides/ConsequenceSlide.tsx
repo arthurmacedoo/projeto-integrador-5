@@ -1,77 +1,86 @@
 // components/slides/ConsequenceSlide.tsx
 import { View, Text } from 'react-native';
 import type { ConsequenceSlide as ConsequenceSlideType } from '@/types';
+import { useAppTheme } from '@/constants/theme';
+import { useAutoRead } from '@/hooks/useSpeech';
+import AccessibleText from '@/components/accessibility/AccessibleText';
+import ListenButton from '@/components/accessibility/ListenButton';
 
 interface Props {
   slide: ConsequenceSlideType;
 }
 
 export default function ConsequenceSlide({ slide }: Props) {
+  const { colors, highContrast } = useAppTheme();
   const isNegative = slide.isNegative;
+  const statusColor = isNegative ? colors.danger : colors.success;
+  const statusLabel = isNegative ? 'CUIDADO: DECISÃO ARRISCADA' : 'EXCELENTE DECISÃO!';
+
+  const spokenText =
+    `${isNegative ? 'Cuidado, decisão arriscada.' : 'Excelente decisão!'} ${slide.text}` +
+    (slide.tip ? ` Dica do Guardião: ${slide.tip}` : '');
+
+  useAutoRead(spokenText);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center' }}>
-      {/* Badge de Resultado */}
+      {/* Badge de Resultado (texto + ícone, não só cor — acessível p/ daltônicos) */}
       <View style={{
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 16,
-        backgroundColor: isNegative ? '#ef444420' : '#22c55e20',
+        backgroundColor: highContrast ? 'transparent' : (isNegative ? colors.dangerSoft : '#22c55e20'),
+        borderWidth: highContrast ? 2 : 0,
+        borderColor: statusColor,
         paddingHorizontal: 14,
         paddingVertical: 8,
         borderRadius: 12,
         alignSelf: 'flex-start',
       }}>
-        <Text style={{ fontSize: 20, marginRight: 8 }}>
+        <Text style={{ fontSize: 20, marginRight: 8 }} importantForAccessibility="no">
           {isNegative ? '⚠️' : '🎉'}
         </Text>
-        <Text style={{
-          color: isNegative ? '#f87171' : '#4ade80',
-          fontSize: 14,
-          fontWeight: 'bold',
-        }}>
-          {isNegative ? 'CUIDADO: DECISÃO ARRISCADA' : 'EXCELENTE DECISÃO!'}
-        </Text>
+        <AccessibleText variant="caption" bold style={{ color: statusColor }}>
+          {statusLabel}
+        </AccessibleText>
       </View>
 
       {/* Card da Consequência */}
       <View style={{
-        backgroundColor: '#1e293b',
+        backgroundColor: colors.surface,
         borderRadius: 20,
         padding: 22,
-        borderWidth: 1,
-        borderColor: isNegative ? '#ef444450' : '#22c55e50',
+        borderWidth: highContrast ? 2 : 1,
+        borderColor: highContrast ? statusColor : (isNegative ? colors.dangerBorder : '#22c55e50'),
         marginBottom: 20,
       }}>
-        <Text style={{
-          color: '#f8fafc',
-          fontSize: 17,
-          lineHeight: 26,
-        }}>
-          {slide.text}
-        </Text>
+        <AccessibleText>{slide.text}</AccessibleText>
       </View>
 
       {/* Dica de Ouro do Mascote */}
       {slide.tip && (
         <View style={{
-          backgroundColor: '#0f172a',
+          backgroundColor: colors.background,
           borderRadius: 16,
           padding: 16,
           borderLeftWidth: 4,
-          borderLeftColor: '#3b82f6',
+          borderLeftColor: colors.primary,
+          borderWidth: highContrast ? 1 : 0,
+          borderColor: colors.border,
         }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
-            <Text style={{ fontSize: 16, marginRight: 6 }}>💡</Text>
-            <Text style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: 12 }}>
+            <Text style={{ fontSize: 16, marginRight: 6 }} importantForAccessibility="no">💡</Text>
+            <AccessibleText variant="caption" bold style={{ color: colors.primaryText }}>
               DICA DO GUARDIÃO
-            </Text>
+            </AccessibleText>
           </View>
-          <Text style={{ color: '#cbd5e1', fontSize: 14, lineHeight: 20 }}>
+          <AccessibleText variant="caption" muted>
             {slide.tip}
-          </Text>
+          </AccessibleText>
         </View>
       )}
+
+      <ListenButton text={spokenText} />
     </View>
   );
 }

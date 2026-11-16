@@ -1,8 +1,11 @@
 // app/(app)/profile.tsx
-import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useUserStore } from '@/store/useUserStore';
 import { logout as logoutService } from '@/services/auth.service';
 import { getLevelForXP, getNextLevel, levelProgress, LEVELS } from '@/constants/levels';
+import { useAppTheme } from '@/constants/theme';
+import { confirmAction } from '@/utils/alert';
 
 const AVATAR_EMOJIS: Record<string, string> = {
   avatar_1: '🧑',
@@ -14,6 +17,8 @@ const AVATAR_EMOJIS: Record<string, string> = {
 };
 
 export default function ProfileScreen() {
+  const { colors, fs, highContrast } = useAppTheme();
+  const router = useRouter();
   const { displayName, email, xp, level, avatarId, completedLessons, logout } = useUserStore();
 
   const currentLevel = getLevelForXP(xp);
@@ -22,84 +27,78 @@ export default function ProfileScreen() {
   const avatarEmoji = avatarId ? (AVATAR_EMOJIS[avatarId] ?? '🧑') : '🧑';
 
   async function handleLogout() {
-    Alert.alert('Sair da Conta', 'Deseja realmente sair do aplicativo?', [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Sair',
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            await logoutService();
-            logout();
-          } catch (err) {
-            console.error('Erro ao deslogar:', err);
-          }
-        },
-      },
-    ]);
+    confirmAction('Sair da Conta', 'Deseja realmente sair do aplicativo?', 'Sair', async () => {
+      try {
+        await logoutService();
+        logout();
+      } catch (err) {
+        console.error('Erro ao deslogar:', err);
+      }
+    });
   }
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#0f172a' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ padding: 24, paddingTop: 56 }}>
-        <Text style={{ color: '#f8fafc', fontSize: 28, fontWeight: 'bold', marginBottom: 24 }}>
+        <Text style={{ color: colors.text, fontSize: fs(28), fontWeight: 'bold', marginBottom: 24 }}>
           Meu Perfil 👤
         </Text>
 
         {/* Card Principal de Perfil */}
         <View style={{
-          backgroundColor: '#1e293b',
+          backgroundColor: colors.surface,
+          ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
           borderRadius: 24,
           padding: 24,
           alignItems: 'center',
           marginBottom: 24,
           borderWidth: 1,
-          borderColor: '#334155',
+          borderColor: colors.border,
         }}>
           <View style={{
             width: 80,
             height: 80,
             borderRadius: 40,
-            backgroundColor: '#0f172a',
+            backgroundColor: colors.background,
             borderWidth: 3,
-            borderColor: '#3b82f6',
+            borderColor: colors.primary,
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: 12,
           }}>
-            <Text style={{ fontSize: 40 }}>{avatarEmoji}</Text>
+            <Text style={{ fontSize: fs(40) }}>{avatarEmoji}</Text>
           </View>
 
-          <Text style={{ color: '#f8fafc', fontSize: 20, fontWeight: 'bold', marginBottom: 4 }}>
+          <Text style={{ color: colors.text, fontSize: fs(20), fontWeight: 'bold', marginBottom: 4 }}>
             {displayName ?? 'Estudante'}
           </Text>
-          <Text style={{ color: '#94a3b8', fontSize: 13, marginBottom: 16 }}>
+          <Text style={{ color: colors.textMuted, fontSize: fs(13), marginBottom: 16 }}>
             {email ?? ''}
           </Text>
 
           {/* Badges de Status */}
           <View style={{ flexDirection: 'row', gap: 12 }}>
             <View style={{
-              backgroundColor: '#3b82f620',
+              backgroundColor: colors.primarySoft,
               paddingHorizontal: 14,
               paddingVertical: 6,
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: '#3b82f6',
+              borderColor: colors.primary,
             }}>
-              <Text style={{ color: '#60a5fa', fontWeight: 'bold', fontSize: 13 }}>
+              <Text style={{ color: colors.primaryText, fontWeight: 'bold', fontSize: fs(13) }}>
                 Nível {level} • {currentLevel.name}
               </Text>
             </View>
             <View style={{
-              backgroundColor: '#f59e0b20',
+              backgroundColor: colors.warningSoft,
               paddingHorizontal: 14,
               paddingVertical: 6,
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: '#f59e0b',
+              borderColor: colors.warningBase,
             }}>
-              <Text style={{ color: '#fbbf24', fontWeight: 'bold', fontSize: 13 }}>
+              <Text style={{ color: colors.warning, fontWeight: 'bold', fontSize: fs(13) }}>
                 {xp} XP
               </Text>
             </View>
@@ -107,48 +106,50 @@ export default function ProfileScreen() {
         </View>
 
         {/* Estatísticas */}
-        <Text style={{ color: '#64748b', fontSize: 12, fontWeight: 'bold', marginBottom: 12 }}>
+        <Text style={{ color: colors.textSubtle, fontSize: fs(12), fontWeight: 'bold', marginBottom: 12 }}>
           ESTATÍSTICAS DO APRENDIZADO
         </Text>
 
         <View style={{ flexDirection: 'row', gap: 12, marginBottom: 24 }}>
           <View style={{
             flex: 1,
-            backgroundColor: '#1e293b',
+            backgroundColor: colors.surface,
+            ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
             borderRadius: 16,
             padding: 16,
             borderWidth: 1,
-            borderColor: '#334155',
+            borderColor: colors.border,
           }}>
-            <Text style={{ fontSize: 24, marginBottom: 4 }}>🎯</Text>
-            <Text style={{ color: '#f8fafc', fontSize: 22, fontWeight: 'bold' }}>
+            <Text style={{ fontSize: fs(24), marginBottom: 4 }}>🎯</Text>
+            <Text style={{ color: colors.text, fontSize: fs(22), fontWeight: 'bold' }}>
               {completedLessons.size}
             </Text>
-            <Text style={{ color: '#94a3b8', fontSize: 12 }}>Lições Feitas</Text>
+            <Text style={{ color: colors.textMuted, fontSize: fs(12) }}>Lições Feitas</Text>
           </View>
 
           <View style={{
             flex: 1,
-            backgroundColor: '#1e293b',
+            backgroundColor: colors.surface,
+            ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
             borderRadius: 16,
             padding: 16,
             borderWidth: 1,
-            borderColor: '#334155',
+            borderColor: colors.border,
           }}>
-            <Text style={{ fontSize: 24, marginBottom: 4 }}>⚡</Text>
-            <Text style={{ color: '#f8fafc', fontSize: 22, fontWeight: 'bold' }}>
+            <Text style={{ fontSize: fs(24), marginBottom: 4 }}>⚡</Text>
+            <Text style={{ color: colors.text, fontSize: fs(22), fontWeight: 'bold' }}>
               {xp}
             </Text>
-            <Text style={{ color: '#94a3b8', fontSize: 12 }}>Pontos de XP</Text>
+            <Text style={{ color: colors.textMuted, fontSize: fs(12) }}>Pontos de XP</Text>
           </View>
         </View>
 
         {/* Níveis de Conquista */}
-        <Text style={{ color: '#64748b', fontSize: 12, fontWeight: 'bold', marginBottom: 12 }}>
+        <Text style={{ color: colors.textSubtle, fontSize: fs(12), fontWeight: 'bold', marginBottom: 12 }}>
           JORNADA DE NÍVEIS
         </Text>
 
-        <View style={{ backgroundColor: '#1e293b', borderRadius: 20, padding: 16, marginBottom: 24, gap: 10 }}>
+        <View style={{ backgroundColor: colors.surface, borderRadius: 20, padding: 16, marginBottom: 24, gap: 10, ...(highContrast && { borderWidth: 1, borderColor: colors.border }) }}>
           {LEVELS.map((lvl) => {
             const isUnlocked = level >= lvl.level;
             const isCurrent = level === lvl.level;
@@ -160,30 +161,30 @@ export default function ProfileScreen() {
                   flexDirection: 'row',
                   alignItems: 'center',
                   padding: 10,
-                  backgroundColor: isCurrent ? '#0f172a' : 'transparent',
+                  backgroundColor: isCurrent ? colors.background : 'transparent',
                   borderRadius: 12,
                   borderWidth: isCurrent ? 1 : 0,
-                  borderColor: '#3b82f6',
+                  borderColor: colors.primary,
                 }}
               >
-                <Text style={{ fontSize: 20, marginRight: 12 }}>
+                <Text style={{ fontSize: fs(20), marginRight: 12 }}>
                   {isUnlocked ? '🌟' : '🔒'}
                 </Text>
                 <View style={{ flex: 1 }}>
                   <Text style={{
-                    color: isUnlocked ? '#f8fafc' : '#64748b',
+                    color: isUnlocked ? colors.text : colors.textSubtle,
                     fontWeight: isCurrent ? 'bold' : 'normal',
-                    fontSize: 14,
+                    fontSize: fs(14),
                   }}>
                     Nível {lvl.level}: {lvl.name}
                   </Text>
-                  <Text style={{ color: '#64748b', fontSize: 11 }}>
+                  <Text style={{ color: colors.textSubtle, fontSize: fs(11) }}>
                     {lvl.xpRequired} XP necessários
                   </Text>
                 </View>
                 {isCurrent && (
-                  <View style={{ backgroundColor: '#3b82f6', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 }}>
-                    <Text style={{ color: '#fff', fontSize: 10, fontWeight: 'bold' }}>ATUAL</Text>
+                  <View style={{ backgroundColor: colors.primary, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 }}>
+                    <Text style={{ color: colors.onPrimary, fontSize: fs(10), fontWeight: 'bold' }}>ATUAL</Text>
                   </View>
                 )}
               </View>
@@ -191,20 +192,46 @@ export default function ProfileScreen() {
           })}
         </View>
 
+        {/* Botão de Acessibilidade */}
+        <TouchableOpacity
+          onPress={() => router.push('/accessibility')}
+          accessibilityRole="button"
+          accessibilityLabel="Abrir configurações de acessibilidade"
+          style={{
+            backgroundColor: colors.surface,
+            ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
+            borderRadius: 14,
+            padding: 16,
+            minHeight: 56,
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderWidth: 1,
+            borderColor: colors.primary,
+            marginBottom: 12,
+          }}
+        >
+          <Text style={{ fontSize: fs(22), marginRight: 12 }} importantForAccessibility="no">♿</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: colors.text, fontWeight: 'bold', fontSize: fs(16) }}>Acessibilidade</Text>
+            <Text style={{ color: colors.textMuted, fontSize: fs(13) }}>Tamanho do texto, alto contraste e leitura em voz alta</Text>
+          </View>
+          <Text style={{ color: colors.primaryText, fontSize: fs(18) }}>›</Text>
+        </TouchableOpacity>
+
         {/* Botão de Logout */}
         <TouchableOpacity
           onPress={handleLogout}
           style={{
-            backgroundColor: '#ef444420',
+            backgroundColor: colors.dangerSoft,
             borderRadius: 14,
             padding: 16,
             alignItems: 'center',
             borderWidth: 1,
-            borderColor: '#ef444450',
+            borderColor: colors.dangerBorder,
             marginBottom: 32,
           }}
         >
-          <Text style={{ color: '#f87171', fontWeight: 'bold', fontSize: 15 }}>
+          <Text style={{ color: colors.danger, fontWeight: 'bold', fontSize: fs(15) }}>
             Sair da Conta 🚪
           </Text>
         </TouchableOpacity>
