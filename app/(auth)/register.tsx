@@ -11,13 +11,15 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   ScrollView,
 } from 'react-native';
 import { Link } from 'expo-router';
 import { register } from '@/services/auth.service';
+import { useAppTheme } from '@/constants/theme';
+import { showAlert } from '@/utils/alert';
 
 export default function RegisterScreen() {
+  const { colors, fs, highContrast } = useAppTheme();
   const [name, setName]         = useState('');
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
@@ -25,11 +27,11 @@ export default function RegisterScreen() {
 
   async function handleRegister() {
     if (!name.trim() || !email.trim() || !password) {
-      Alert.alert('Atenção', 'Preencha todos os campos.');
+      showAlert('Atenção', 'Preencha todos os campos.');
       return;
     }
     if (password.length < 8) {
-      Alert.alert('Atenção', 'A senha deve ter pelo menos 8 caracteres.');
+      showAlert('Atenção', 'A senha deve ter pelo menos 8 caracteres.');
       return;
     }
     try {
@@ -41,7 +43,7 @@ export default function RegisterScreen() {
         err.code === 'auth/email-already-in-use'
           ? 'Este e-mail já está cadastrado.'
           : 'Erro ao criar conta. Tente novamente.';
-      Alert.alert('Erro', msg);
+      showAlert('Erro', msg);
     } finally {
       setLoading(false);
     }
@@ -49,69 +51,72 @@ export default function RegisterScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: '#0f172a' }}
+      style={{ flex: 1, backgroundColor: colors.background }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 24 }}>
-        <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#f1f5f9', marginBottom: 6 }}>
+        <Text style={{ fontSize: fs(28), fontWeight: 'bold', color: colors.textStrong, marginBottom: 6 }}>
           Criar conta 🚀
         </Text>
-        <Text style={{ fontSize: 14, color: '#94a3b8', marginBottom: 32 }}>
+        <Text style={{ fontSize: fs(14), color: colors.textMuted, marginBottom: 32 }}>
           Comece sua jornada financeira agora
         </Text>
 
         {/* Campo Nome */}
-        <Text style={{ color: '#cbd5e1', marginBottom: 6, fontSize: 14 }}>Nome</Text>
+        <Text style={{ color: colors.textSoft, marginBottom: 6, fontSize: fs(14) }}>Nome</Text>
         <TextInput
           value={name}
           onChangeText={setName}
           placeholder="Como podemos te chamar?"
-          placeholderTextColor="#475569"
+          placeholderTextColor={colors.textFaint}
           autoCapitalize="words"
           style={{
-            backgroundColor: '#1e293b',
+            backgroundColor: colors.surface,
+            ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
             borderRadius: 12,
             padding: 14,
-            color: '#f1f5f9',
+            color: colors.textStrong,
             marginBottom: 16,
-            fontSize: 16,
+            fontSize: fs(16),
           }}
         />
 
         {/* Campo E-mail */}
-        <Text style={{ color: '#cbd5e1', marginBottom: 6, fontSize: 14 }}>E-mail</Text>
+        <Text style={{ color: colors.textSoft, marginBottom: 6, fontSize: fs(14) }}>E-mail</Text>
         <TextInput
           value={email}
           onChangeText={setEmail}
           placeholder="seu@email.com"
-          placeholderTextColor="#475569"
+          placeholderTextColor={colors.textFaint}
           keyboardType="email-address"
           autoCapitalize="none"
           style={{
-            backgroundColor: '#1e293b',
+            backgroundColor: colors.surface,
+            ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
             borderRadius: 12,
             padding: 14,
-            color: '#f1f5f9',
+            color: colors.textStrong,
             marginBottom: 16,
-            fontSize: 16,
+            fontSize: fs(16),
           }}
         />
 
         {/* Campo Senha */}
-        <Text style={{ color: '#cbd5e1', marginBottom: 6, fontSize: 14 }}>Senha</Text>
+        <Text style={{ color: colors.textSoft, marginBottom: 6, fontSize: fs(14) }}>Senha</Text>
         <TextInput
           value={password}
           onChangeText={setPassword}
           placeholder="Mínimo 8 caracteres"
-          placeholderTextColor="#475569"
+          placeholderTextColor={colors.textFaint}
           secureTextEntry
           style={{
-            backgroundColor: '#1e293b',
+            backgroundColor: colors.surface,
+            ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
             borderRadius: 12,
             padding: 14,
-            color: '#f1f5f9',
+            color: colors.textStrong,
             marginBottom: 28,
-            fontSize: 16,
+            fontSize: fs(16),
           }}
         />
 
@@ -120,7 +125,7 @@ export default function RegisterScreen() {
           onPress={handleRegister}
           disabled={loading}
           style={{
-            backgroundColor: '#3b82f6',
+            backgroundColor: colors.primary,
             borderRadius: 14,
             padding: 16,
             alignItems: 'center',
@@ -128,9 +133,9 @@ export default function RegisterScreen() {
           }}
         >
           {loading ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={colors.onPrimary} />
           ) : (
-            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+            <Text style={{ color: colors.onPrimary, fontWeight: 'bold', fontSize: fs(16) }}>
               Criar conta
             </Text>
           )}
@@ -138,9 +143,9 @@ export default function RegisterScreen() {
 
         {/* Link Login */}
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 24 }}>
-          <Text style={{ color: '#64748b' }}>Já tem conta? </Text>
+          <Text style={{ color: colors.textSubtle, fontSize: fs(14) }}>Já tem conta? </Text>
           <Link href="/(auth)/login">
-            <Text style={{ color: '#3b82f6', fontWeight: 'bold' }}>Entrar</Text>
+            <Text style={{ color: colors.primaryText, fontWeight: 'bold', fontSize: fs(14) }}>Entrar</Text>
           </Link>
         </View>
       </ScrollView>

@@ -1,6 +1,10 @@
 // components/slides/DecisionSlide.tsx
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import type { DecisionSlide as DecisionSlideType, DecisionOption } from '@/types';
+import { useAppTheme } from '@/constants/theme';
+import { useAutoRead } from '@/hooks/useSpeech';
+import AccessibleText from '@/components/accessibility/AccessibleText';
+import ListenButton from '@/components/accessibility/ListenButton';
 
 interface Props {
   slide: DecisionSlideType;
@@ -13,46 +17,60 @@ export default function DecisionSlide({
   selectedOptionId,
   onSelectOption,
 }: Props) {
+  const { colors, highContrast } = useAppTheme();
+  const spokenText =
+    `${slide.question} ` +
+    slide.options.map((o) => `Opção ${o.id}: ${o.text.replace(/[.!?…\s]+$/, '')}.`).join(' ');
+
+  useAutoRead(spokenText);
+
   return (
     <View style={{ flex: 1, justifyContent: 'center' }}>
       {/* Título de Decisão */}
       <View style={{
-        backgroundColor: '#3b82f620',
+        backgroundColor: colors.primarySoft,
+        borderWidth: highContrast ? 1 : 0,
+        borderColor: colors.primary,
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 8,
         alignSelf: 'flex-start',
         marginBottom: 12,
       }}>
-        <Text style={{ color: '#60a5fa', fontWeight: 'bold', fontSize: 12 }}>
+        <AccessibleText variant="caption" bold style={{ color: colors.primaryText }}>
           SUA VEZ DE DECIDIR 💡
-        </Text>
+        </AccessibleText>
       </View>
 
-      <Text style={{
-        color: '#f8fafc',
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 24,
-        lineHeight: 28,
-      }}>
+      <AccessibleText variant="title" accessibilityRole="header" style={{ marginBottom: 8 }}>
         {slide.question}
-      </Text>
+      </AccessibleText>
+
+      <View style={{ marginBottom: 16 }}>
+        <ListenButton text={spokenText} />
+      </View>
 
       {/* Opções de Escolha */}
-      <View style={{ gap: 12 }}>
+      <View style={{ gap: 12 }} accessibilityRole="radiogroup">
         {slide.options.map((opt) => {
           const isSelected = selectedOptionId === opt.id;
           return (
             <TouchableOpacity
               key={opt.id}
               onPress={() => onSelectOption(opt)}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: isSelected, selected: isSelected }}
+              aria-checked={isSelected} // web (navegador) usa o atributo ARIA padrão
+              accessibilityLabel={`Opção ${opt.id}: ${opt.text}`}
               style={{
-                backgroundColor: isSelected ? '#1e3a5f' : '#1e293b',
+                backgroundColor: isSelected
+                  ? (highContrast ? colors.primary : colors.surfaceSelected)
+                  : colors.surface,
+                minHeight: 56,
                 padding: 18,
                 borderRadius: 16,
-                borderWidth: 2,
-                borderColor: isSelected ? '#3b82f6' : '#334155',
+                borderWidth: isSelected ? 3 : 2,
+                borderColor: isSelected ? colors.primary : colors.border,
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
@@ -61,28 +79,30 @@ export default function DecisionSlide({
                 width: 32,
                 height: 32,
                 borderRadius: 16,
-                backgroundColor: isSelected ? '#3b82f6' : '#0f172a',
+                backgroundColor: isSelected ? colors.primary : colors.background,
+                borderWidth: highContrast ? 1 : 0,
+                borderColor: isSelected ? colors.onPrimary : colors.border,
                 justifyContent: 'center',
                 alignItems: 'center',
                 marginRight: 14,
               }}>
-                <Text style={{
-                  color: isSelected ? '#fff' : '#94a3b8',
-                  fontWeight: 'bold',
-                  fontSize: 14,
-                }}>
+                <AccessibleText
+                  variant="caption"
+                  bold
+                  style={{ color: isSelected ? colors.onPrimary : colors.textMuted }}
+                >
                   {opt.id}
-                </Text>
+                </AccessibleText>
               </View>
-              <Text style={{
-                color: isSelected ? '#f8fafc' : '#cbd5e1',
-                fontSize: 15,
-                flex: 1,
-                lineHeight: 22,
-                fontWeight: isSelected ? '600' : 'normal',
-              }}>
+              <AccessibleText
+                bold={isSelected}
+                style={{
+                  flex: 1,
+                  color: isSelected && highContrast ? colors.onPrimary : colors.text,
+                }}
+              >
                 {opt.text}
-              </Text>
+              </AccessibleText>
             </TouchableOpacity>
           );
         })}
