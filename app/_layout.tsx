@@ -4,8 +4,9 @@
 // ──────────────────────────────────────────────────────────────
 import { useEffect } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
-import { Platform, View } from 'react-native';
+import { ActivityIndicator, Platform, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useShallow } from 'zustand/react/shallow';
 import { onAuthChange, fetchUserProfile } from '@/services/auth.service';
 import { getUserProgress } from '@/services/progress.service';
 import { useUserStore } from '@/store/useUserStore';
@@ -15,7 +16,19 @@ import '../global.css';
 export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
-  const { setUser, setLoading, setProgress, logout, uid, avatarId } = useUserStore();
+  // Ações do store são estáveis: pegar só elas (e uid/avatarId/isLoading) evita
+  // re-renderizar o layout raiz inteiro a cada mudança de XP/progresso.
+  const { setUser, setLoading, setProgress, logout, uid, avatarId, isLoading } = useUserStore(
+    useShallow((s) => ({
+      setUser: s.setUser,
+      setLoading: s.setLoading,
+      setProgress: s.setProgress,
+      logout: s.logout,
+      uid: s.uid,
+      avatarId: s.avatarId,
+      isLoading: s.isLoading,
+    }))
+  );
   const { colors } = useAppTheme();
 
   // Web (computador/celular no navegador): idioma da página e foco visível no teclado
@@ -75,6 +88,10 @@ export default function RootLayout() {
 
   // Roteamento reativo baseado no estado do store
   useEffect(() => {
+    // Aguarda o Firebase restaurar a sessão: evita "piscar" a tela de login
+    // para quem já está logado ao abrir/recarregar o link.
+    if (isLoading) return;
+
     const inAuthGroup = segments[0] === '(auth)';
     const inOnboarding = segments[0] === 'onboarding';
 
@@ -88,7 +105,7 @@ export default function RootLayout() {
       // Autenticado com avatar → Home
       router.replace('/(app)');
     }
-  }, [uid, avatarId, segments]);
+  }, [uid, avatarId, segments, isLoading]);
 
   const stack = (
     <>
@@ -98,6 +115,25 @@ export default function RootLayout() {
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="(app)" />
       </Stack>
+      {/* Tela de carregamento enquanto a sessão é restaurada (o Stack continua
+          montado por baixo, pois o router precisa dele para redirecionar). */}
+      {isLoading && (
+        <View
+          accessibilityLabel="Carregando TchôEduca"
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            backgroundColor: colors.background,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      )}
     </>
   );
 

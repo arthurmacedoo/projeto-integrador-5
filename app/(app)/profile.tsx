@@ -1,30 +1,31 @@
 // app/(app)/profile.tsx
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useShallow } from 'zustand/react/shallow';
 import { useUserStore } from '@/store/useUserStore';
 import { logout as logoutService } from '@/services/auth.service';
-import { getLevelForXP, getNextLevel, levelProgress, LEVELS } from '@/constants/levels';
+import { getLevelForXP, LEVELS } from '@/constants/levels';
 import { useAppTheme } from '@/constants/theme';
+import { getAvatarEmoji } from '@/constants/avatars';
 import { confirmAction } from '@/utils/alert';
-
-const AVATAR_EMOJIS: Record<string, string> = {
-  avatar_1: '🧑',
-  avatar_2: '👩',
-  avatar_3: '🧔',
-  avatar_4: '👩‍🦱',
-  avatar_5: '🧑‍🎓',
-  avatar_6: '👩‍💼',
-};
 
 export default function ProfileScreen() {
   const { colors, fs, highContrast } = useAppTheme();
   const router = useRouter();
-  const { displayName, email, xp, level, avatarId, completedLessons, logout } = useUserStore();
+  const { displayName, email, xp, level, avatarId, completedCount, logout } = useUserStore(
+    useShallow((s) => ({
+      displayName: s.displayName,
+      email: s.email,
+      xp: s.xp,
+      level: s.level,
+      avatarId: s.avatarId,
+      completedCount: s.completedLessons.size,
+      logout: s.logout,
+    }))
+  );
 
   const currentLevel = getLevelForXP(xp);
-  const nextLevel = getNextLevel(level);
-  const progress = levelProgress(xp);
-  const avatarEmoji = avatarId ? (AVATAR_EMOJIS[avatarId] ?? '🧑') : '🧑';
+  const avatarEmoji = getAvatarEmoji(avatarId);
 
   async function handleLogout() {
     confirmAction('Sair da Conta', 'Deseja realmente sair do aplicativo?', 'Sair', async () => {
@@ -122,7 +123,7 @@ export default function ProfileScreen() {
           }}>
             <Text style={{ fontSize: fs(24), marginBottom: 4 }}>🎯</Text>
             <Text style={{ color: colors.text, fontSize: fs(22), fontWeight: 'bold' }}>
-              {completedLessons.size}
+              {completedCount}
             </Text>
             <Text style={{ color: colors.textMuted, fontSize: fs(12) }}>Lições Feitas</Text>
           </View>

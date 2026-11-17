@@ -10,14 +10,15 @@ import {
   getReactNativePersistence,
 } from 'firebase/auth';
 import {
-  getFirestore,
   initializeFirestore,
   persistentLocalCache,
   persistentMultipleTabManager,
   CACHE_SIZE_UNLIMITED,
 } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// Obs.: o Firebase Storage foi removido — não era usado em nenhuma tela e
+// adicionava peso desnecessário ao bundle baixado pelo navegador.
 
 // ── Configuração via variáveis de ambiente (com fallback seguro) ──
 const firebaseConfig = {
@@ -31,8 +32,6 @@ const firebaseConfig = {
 
 // ── Singleton: evita reinicialização em hot reload ─────────
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-
-import { Platform } from 'react-native';
 
 // ── Auth com persistência condicional (React Native vs Web) ──
 let authInstance;
@@ -58,8 +57,5 @@ export const db = initializeFirestore(app, {
     cacheSizeBytes: CACHE_SIZE_UNLIMITED,
   }),
 });
-
-// ── Storage para avatares e assets das lições ─────────────
-export const storage = getStorage(app);
 
 export default app;

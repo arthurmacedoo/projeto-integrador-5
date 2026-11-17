@@ -36,7 +36,11 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "build:web": "expo export -p web",
+    "build:gh-pages": "node scripts/deploy-gh-pages.mjs",
+    "deploy:gh-pages": "node scripts/deploy-gh-pages.mjs --publish"
   },
   "private": true
 }

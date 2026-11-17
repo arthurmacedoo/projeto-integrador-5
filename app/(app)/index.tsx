@@ -4,37 +4,34 @@
 // ──────────────────────────────────────────────────────────────
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useShallow } from 'zustand/react/shallow';
 import { useUserStore } from '@/store/useUserStore';
 import { getLevelForXP, getNextLevel, levelProgress, xpToNextLevel } from '@/constants/levels';
 import { useAppTheme } from '@/constants/theme';
+import { getAvatarEmoji } from '@/constants/avatars';
 
-const AVATAR_EMOJIS: Record<string, string> = {
-  avatar_1: '🧑',
-  avatar_2: '👩',
-  avatar_3: '🧔',
-  avatar_4: '👩‍🦱',
-  avatar_5: '🧑‍🎓',
-  avatar_6: '👩‍💼',
+// Cor por nível (constante fora do componente: não é recriada a cada render)
+// (Nível 1 era #78716c — clareado para #a8a29e para passar no contraste WCAG AA)
+const LEVEL_COLORS: Record<number, string> = {
+  1: '#a8a29e', 2: '#22c55e', 3: '#3b82f6', 4: '#a855f7', 5: '#f59e0b',
 };
 
 export default function HomeScreen() {
   const { colors, fs, highContrast } = useAppTheme();
   const router = useRouter();
-  const { displayName, xp, level, avatarVariant, avatarId } = useUserStore();
-  const avatarEmoji = avatarId ? (AVATAR_EMOJIS[avatarId] ?? '🧑') : '🧑';
+  // Seletor com useShallow: a Home só re-renderiza quando estes campos mudam
+  const { displayName, xp, level, avatarId } = useUserStore(
+    useShallow((s) => ({ displayName: s.displayName, xp: s.xp, level: s.level, avatarId: s.avatarId }))
+  );
+  const avatarEmoji = getAvatarEmoji(avatarId);
 
   const currentLevel = getLevelForXP(xp);
   const nextLevel = getNextLevel(level);
   const progress = levelProgress(xp);
   const toNext = xpToNextLevel(xp);
 
-  // Cor por nível
-  // (Nível 1 era #78716c — clareado para #a8a29e para passar no contraste WCAG AA)
-  const levelColors: Record<number, string> = {
-    1: '#a8a29e', 2: '#22c55e', 3: '#3b82f6', 4: '#a855f7', 5: '#f59e0b',
-  };
   // No alto contraste, todos os níveis usam o amarelo de destaque
-  const levelColor = highContrast ? colors.primary : (levelColors[level] ?? '#3b82f6');
+  const levelColor = highContrast ? colors.primary : (LEVEL_COLORS[level] ?? '#3b82f6');
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
