@@ -8,10 +8,20 @@ import { useUserStore } from '@/store/useUserStore';
 import { getLevelForXP, getNextLevel, levelProgress, xpToNextLevel } from '@/constants/levels';
 import { useAppTheme } from '@/constants/theme';
 
+const AVATAR_EMOJIS: Record<string, string> = {
+  avatar_1: '🧑',
+  avatar_2: '👩',
+  avatar_3: '🧔',
+  avatar_4: '👩‍🦱',
+  avatar_5: '🧑‍🎓',
+  avatar_6: '👩‍💼',
+};
+
 export default function HomeScreen() {
   const { colors, fs, highContrast } = useAppTheme();
   const router = useRouter();
   const { displayName, xp, level, avatarVariant, avatarId } = useUserStore();
+  const avatarEmoji = avatarId ? (AVATAR_EMOJIS[avatarId] ?? '🧑') : '🧑';
 
   const currentLevel = getLevelForXP(xp);
   const nextLevel = getNextLevel(level);
@@ -59,7 +69,7 @@ export default function HomeScreen() {
               alignItems: 'center',
               marginRight: 16,
             }}>
-              <Text style={{ fontSize: fs(28) }}>🧑</Text>
+              <Text style={{ fontSize: fs(28) }}>{avatarEmoji}</Text>
             </View>
             <View style={{ flex: 1 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>

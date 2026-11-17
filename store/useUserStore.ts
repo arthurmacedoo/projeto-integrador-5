@@ -131,15 +131,19 @@ export const useUserStore = create<UserState>((set, get) => ({
     });
 
     // Persiste no Firestore em background
-    await Promise.all([
-      completeLesson(uid, lessonId, xpEarned),
-      updateUserXPAndLevel(
-        uid,
-        newXP,
-        newLevelConfig.level,
-        newLevelConfig.avatarVariantUnlocked
-      ),
-    ]);
+    try {
+      await Promise.all([
+        completeLesson(uid, lessonId, xpEarned),
+        updateUserXPAndLevel(
+          uid,
+          newXP,
+          newLevelConfig.level,
+          newLevelConfig.avatarVariantUnlocked
+        ),
+      ]);
+    } catch (err) {
+      console.warn('Progresso mantido em cache local:', err);
+    }
 
     return levelUpResult;
   },

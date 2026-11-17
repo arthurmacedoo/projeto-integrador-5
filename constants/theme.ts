@@ -10,7 +10,7 @@
 import { useCallback } from 'react';
 import { useAccessibilityStore, FONT_SCALE_VALUES } from '@/store/useAccessibilityStore';
 
-// Paleta padrão = design original do FinEdu (tema escuro slate/azul)
+// Paleta padrão = design original do TchôEduca (tema escuro slate/azul)
 export const defaultColors = {
   // Fundos
   background: '#0f172a',

@@ -409,7 +409,7 @@ const lessons = [
 
 // ── EXECUÇÃO DO SEED ──────────────────────────────────────────
 async function runSeed() {
-  console.log('🌱 Iniciando Seed do FinEdu...');
+  console.log('🌱 Iniciando Seed do TchôEduca...');
 
   // 1. Salva Níveis
   console.log('📌 Populando config/levels...');

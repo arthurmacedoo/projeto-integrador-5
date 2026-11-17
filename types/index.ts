@@ -1,5 +1,5 @@
 // ──────────────────────────────────────────────────────────────
-// TIPOS CENTRAIS DO FINEDU APP
+// TIPOS CENTRAIS DO TCHÔEDUCA APP
 // Refletem a estrutura de documentos do Firestore
 // ──────────────────────────────────────────────────────────────
 

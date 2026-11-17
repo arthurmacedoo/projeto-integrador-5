@@ -47,7 +47,7 @@ export default function TrailDetailScreen() {
       <View style={{ padding: 24, paddingTop: 56 }}>
         {/* Voltar */}
         <TouchableOpacity
-          onPress={() => router.back()}
+          onPress={() => router.push('/(app)/trails')}
           style={{ marginBottom: 16 }}
         >
           <Text style={{ color: colors.accentText, fontSize: fs(14), fontWeight: '600' }}>

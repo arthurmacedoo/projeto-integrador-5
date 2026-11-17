@@ -82,6 +82,5 @@ export async function updateAvatar(
   uid: string,
   avatarId: string
 ): Promise<void> {
-  const { updateDoc, doc: firestoreDoc } = await import('firebase/firestore');
-  await updateDoc(firestoreDoc(db, 'users', uid), { avatarId });
+  await setDoc(doc(db, 'users', uid), { avatarId }, { merge: true });
 }

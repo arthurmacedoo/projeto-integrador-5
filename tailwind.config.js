@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Paleta principal FinEdu
+        // Paleta principal TchôEduca
         brand: {
           50:  '#eff6ff',
           100: '#dbeafe',
