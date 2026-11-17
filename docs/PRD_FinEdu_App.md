@@ -1,4 +1,4 @@
-# PRD — FinEdu: Educação Financeira Gamificada
+# PRD — TchôEduca: Educação Financeira Gamificada
 ### Projeto Integrador 5 (PEI 5) — Versão 1.0
 **Status:** Em Planejamento | **Última atualização:** 01/09/2026  
 **Documento gerado após:** Entrevista estratégica de discovery de produto
@@ -9,7 +9,7 @@
 
 ### 1.1 Resumo Executivo
 
-**FinEdu** é um aplicativo móvel de microlearning gamificado que capacita jovens adultos e microempreendedores informais da Baixada Cuiabana a tomarem decisões financeiras mais seguras — começando pela proteção contra golpes digitais (Pix/WhatsApp) e evoluindo para temas como orçamento pessoal, reserva de emergência e formalização MEI.
+**TchôEduca** é um aplicativo móvel de microlearning gamificado que capacita jovens adultos e microempreendedores informais da Baixada Cuiabana a tomarem decisões financeiras mais seguras — começando pela proteção contra golpes digitais (Pix/WhatsApp) e evoluindo para temas como orçamento pessoal, reserva de emergência e formalização MEI.
 
 O diferencial do produto é a combinação de **narrativa interativa baseada em cenários reais** (roleplay de decisão) com um **sistema de progressão por XP e Níveis** que evolui visualmente o avatar do usuário — criando uma experiência de aprendizado onde cada escolha tem consequências claras e recompensas imediatas.
 
@@ -19,7 +19,7 @@ O diferencial do produto é a combinação de **narrativa interativa baseada em 
 
 ### 1.3 Proposta de Valor
 
-| Para | O problema é | O FinEdu oferece |
+| Para | O problema é | O TchôEduca oferece |
 |---|---|---|
 | Jovens adultos (18–35 anos) | Vulnerabilidade a golpes digitais e falta de planejamento | Lições em formato de história interativa com decisões reais e consequências imediatas |
 | Microempreendedores informais | Desconhecimento sobre MEI e gestão básica | Trilha guiada de formalização com passo a passo gamificado |
@@ -120,7 +120,7 @@ O MVP é considerado completo quando:
 - **Lógica de evolução:** cada avatar tem 5 variações visuais, uma para cada nível
 
 **E1.F3 — Tela de Boas-Vindas / Tour**
-- Carousel de 3 telas explicando: "O que é o FinEdu", "Como funciona o XP", "O que você vai aprender"
+- Carousel de 3 telas explicando: "O que é o TchôEduca", "Como funciona o XP", "O que você vai aprender"
 - Botão "Começar" leva à Home
 
 **Regra de Negócio:**
@@ -285,7 +285,7 @@ Cada lição é composta por N **slides** (documentos aninhados no Firestore). T
 | **João** | Protagonista jovem adulto, trabalhador | Jovem, 25 anos, estilo casual |
 | **Dona Cida** | Personagem vulnerável, representa idosos e menos digitais | Mulher, ~55 anos |
 | **Golpista (sem rosto)** | Antagonista, representado por ícone de tela de celular | Nunca aparece fisicamente |
-| **Assistente FinEdu** | Narrador/guia, dá as dicas ao final de cada consequência | Mascote do app |
+| **Assistente TchôEduca** | Narrador/guia, dá as dicas ao final de cada consequência | Mascote do app |
 
 ---
 

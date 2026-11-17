@@ -52,7 +52,7 @@ export default function LoginScreen() {
       <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
         {/* Logo / Título */}
         <Text style={{ fontSize: fs(36), fontWeight: 'bold', color: colors.primary, marginBottom: 8 }}>
-          💰 FinEdu
+          💰 TchôEduca
         </Text>
         <Text style={{ fontSize: fs(16), color: colors.textMuted, marginBottom: 40 }}>
           Educação Financeira Gamificada

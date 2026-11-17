@@ -31,9 +31,25 @@ export default function LessonRunnerScreen() {
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [finishing, setFinishing] = useState(false);
 
+  function navigateBackToTrail() {
+    if (trailId) {
+      router.replace({
+        pathname: '/(app)/trails/[trailId]',
+        params: { trailId },
+      } as any);
+    } else {
+      router.back();
+    }
+  }
+
   useEffect(() => {
     async function load() {
       if (!trailId || !lessonId) return;
+      setLoading(true);
+      setSlideIndex(0);
+      setSelectedOption(null);
+      setLevelUpData(null);
+      setShowLevelUp(false);
       try {
         const data = await getLesson(trailId, lessonId);
         setLesson(data);
@@ -87,11 +103,11 @@ export default function LessonRunnerScreen() {
           setLevelUpData(levelUp);
           setShowLevelUp(true);
         } else {
-          router.back();
+          navigateBackToTrail();
         }
       } catch (err) {
         console.error('Erro ao finalizar lição:', err);
-        router.back();
+        navigateBackToTrail();
       } finally {
         setFinishing(false);
       }
@@ -108,7 +124,7 @@ export default function LessonRunnerScreen() {
         {/* Barra Superior com Progresso do Slide */}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, marginTop: 10 }}>
           <TouchableOpacity
-            onPress={() => router.back()}
+            onPress={navigateBackToTrail}
             accessibilityRole="button"
             accessibilityLabel="Sair da lição"
             hitSlop={12}
@@ -190,7 +206,7 @@ export default function LessonRunnerScreen() {
           levelUpData={levelUpData}
           onDismiss={() => {
             setShowLevelUp(false);
-            router.back();
+            navigateBackToTrail();
           }}
         />
       </View>

@@ -1,4 +1,4 @@
-# 📱 FinEdu — Educação Financeira Gamificada
+# 📱 TchôEduca — Educação Financeira Gamificada
 
 > **Projeto Integrador 5 (PEI 5)**  
 > Aplicativo de microlearning interativo focado na tomada de decisões financeiras seguras e proteção contra fraudes digitais (Pix e WhatsApp) para jovens e microempreendedores da Baixada Cuiabana.

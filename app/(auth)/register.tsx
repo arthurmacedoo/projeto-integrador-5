@@ -15,11 +15,13 @@ import {
 } from 'react-native';
 import { Link } from 'expo-router';
 import { register } from '@/services/auth.service';
+import { useUserStore } from '@/store/useUserStore';
 import { useAppTheme } from '@/constants/theme';
 import { showAlert } from '@/utils/alert';
 
 export default function RegisterScreen() {
   const { colors, fs, highContrast } = useAppTheme();
+  const { setUser } = useUserStore();
   const [name, setName]         = useState('');
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
@@ -36,7 +38,16 @@ export default function RegisterScreen() {
     }
     try {
       setLoading(true);
-      await register(name.trim(), email.trim(), password);
+      const uid = await register(name.trim(), email.trim(), password);
+      setUser({
+        uid,
+        displayName: name.trim(),
+        email: email.trim(),
+        avatarId: null,
+        avatarVariant: 1,
+        xp: 0,
+        level: 1,
+      });
       // Observer em _layout.tsx detecta o novo usuário e redireciona
     } catch (err: any) {
       const msg =

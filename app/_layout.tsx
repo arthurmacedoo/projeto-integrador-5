@@ -23,11 +23,11 @@ export default function RootLayout() {
     if (Platform.OS !== 'web' || typeof document === 'undefined') return;
     // Leitores de tela do PC (NVDA, JAWS, VoiceOver) usam isto para escolher a pronúncia
     document.documentElement.lang = 'pt-BR';
-    document.title = 'FinEdu';
+    document.title = 'TchôEduca';
     // Contorno amarelo bem visível em quem está com o foco ao navegar com Tab
-    if (!document.getElementById('finedu-a11y-focus')) {
+    if (!document.getElementById('tchoeduca-a11y-focus')) {
       const style = document.createElement('style');
-      style.id = 'finedu-a11y-focus';
+      style.id = 'tchoeduca-a11y-focus';
       style.textContent =
         '*:focus-visible { outline: 3px solid #ffd600 !important; outline-offset: 2px !important; border-radius: 8px; }';
       document.head.appendChild(style);
@@ -48,7 +48,18 @@ export default function RootLayout() {
           if (profile) {
             setUser({ ...profile, uid: firebaseUser.uid });
             setProgress(progress);
+          } else {
+            // Caso o documento ainda esteja sendo criado (ex: logo após cadastro)
+            setUser({
+              uid: firebaseUser.uid,
+              email: firebaseUser.email ?? '',
+            });
           }
+        } catch {
+          setUser({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email ?? '',
+          });
         } finally {
           setLoading(false);
         }

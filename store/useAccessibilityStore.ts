@@ -55,7 +55,7 @@ export const useAccessibilityStore = create<AccessibilityState>()(
       reset: () => set(DEFAULTS),
     }),
     {
-      name: 'finedu-accessibility',
+      name: 'tchoeduca-accessibility',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

@@ -14,7 +14,7 @@ const CHARACTER_ICONS: Record<string, { emoji: string; name: string }> = {
   joao:       { emoji: '🧑', name: 'João' },
   dona_cida:  { emoji: '👩', name: 'Dona Cida' },
   carlos:     { emoji: '🧔', name: 'Carlos' },
-  assistente: { emoji: '🛡️', name: 'Guia FinEdu' },
+  assistente: { emoji: '🛡️', name: 'Guia TchôEduca' },
 };
 
 export default function NarrativeSlide({ slide }: Props) {

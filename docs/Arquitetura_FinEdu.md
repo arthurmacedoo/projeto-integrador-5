@@ -1,6 +1,6 @@
-# Arquitetura Técnica — FinEdu App
+# Arquitetura Técnica — TchôEduca App
 ### Fluxo de Dados: Expo ↔ Firestore ↔ Firebase Auth
-**Versão:** 1.0 | **Referência:** PRD FinEdu v1.0
+**Versão:** 1.0 | **Referência:** PRD TchôEduca v1.0
 
 ---
 

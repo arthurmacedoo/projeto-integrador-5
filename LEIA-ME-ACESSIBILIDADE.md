@@ -1,4 +1,4 @@
-# Acessibilidade — FinEdu (PEI 5)
+# Acessibilidade — TchôEduca (PEI 5)
 
 ## Como aplicar
 1. Extraia este zip na raiz do repositório e substitua os arquivos.

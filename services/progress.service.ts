@@ -33,11 +33,15 @@ export async function updateUserXPAndLevel(
   newLevel: number,
   avatarVariant: number
 ): Promise<void> {
-  await updateDoc(doc(db, 'users', uid), {
-    xp: newXP,
-    level: newLevel,
-    avatarVariant,
-  });
+  await setDoc(
+    doc(db, 'users', uid),
+    {
+      xp: newXP,
+      level: newLevel,
+      avatarVariant,
+    },
+    { merge: true }
+  );
 }
 
 // ── Busca todo o progresso do usuário ─────────────────────
