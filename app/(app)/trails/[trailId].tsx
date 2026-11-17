@@ -11,7 +11,9 @@ export default function TrailDetailScreen() {
   const { colors, fs, highContrast } = useAppTheme();
   const { trailId } = useLocalSearchParams<{ trailId: string }>();
   const router = useRouter();
-  const { isLessonCompleted } = useUserStore();
+  // Assina o Map de progresso: a tela atualiza assim que uma lição é concluída
+  const completedLessons = useUserStore((s) => s.completedLessons);
+  const isLessonCompleted = (id: string) => completedLessons.has(id);
 
   const [lessons, setLessons] = useState<LessonSummary[]>([]);
   const [loading, setLoading] = useState(true);

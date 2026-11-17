@@ -10,23 +10,18 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 import { updateAvatar as updateAvatarService } from '@/services/auth.service';
 import { useUserStore } from '@/store/useUserStore';
 import { useAppTheme } from '@/constants/theme';
+import { AVATARS } from '@/constants/avatars';
 import { showAlert } from '@/utils/alert';
-
-const AVATARS = [
-  { id: 'avatar_1', emoji: '🧑', label: 'Lucas'  },
-  { id: 'avatar_2', emoji: '👩', label: 'Ana'    },
-  { id: 'avatar_3', emoji: '🧔', label: 'Carlos' },
-  { id: 'avatar_4', emoji: '👩‍🦱', label: 'Maria'  },
-  { id: 'avatar_5', emoji: '🧑‍🎓', label: 'Pedro'  },
-  { id: 'avatar_6', emoji: '👩‍💼', label: 'Júlia'  },
-];
 
 export default function AvatarSelectScreen() {
   const { colors, fs, highContrast } = useAppTheme();
-  const { uid, updateAvatar } = useUserStore();
+  const { uid, updateAvatar } = useUserStore(
+    useShallow((s) => ({ uid: s.uid, updateAvatar: s.updateAvatar }))
+  );
   const [selected, setSelected] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 

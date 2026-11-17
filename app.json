@@ -18,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundColor": "#0f172a"
       },
       "package": "com.tchoeduca.app",
@@ -27,7 +27,12 @@
     "web": {
       "bundler": "metro",
       "output": "single",
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "shortName": "TchoEduca",
+      "lang": "pt-BR",
+      "description": "Educação financeira gamificada contra golpes de Pix e WhatsApp.",
+      "themeColor": "#0f172a",
+      "backgroundColor": "#0f172a"
     },
     "plugins": [
       "expo-router",

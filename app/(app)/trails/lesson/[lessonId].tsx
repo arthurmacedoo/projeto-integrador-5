@@ -18,7 +18,7 @@ import { useAppTheme } from '@/constants/theme';
 export default function LessonRunnerScreen() {
   const { trailId, lessonId } = useLocalSearchParams<{ trailId: string; lessonId: string }>();
   const router = useRouter();
-  const { finishLesson } = useUserStore();
+  const finishLesson = useUserStore((s) => s.finishLesson);
   const { colors, fontSize, highContrast } = useAppTheme();
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
@@ -44,14 +44,18 @@ export default function LessonRunnerScreen() {
 
   useEffect(() => {
     async function load() {
-      if (!trailId || !lessonId) return;
+      if (!lessonId) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       setSlideIndex(0);
       setSelectedOption(null);
       setLevelUpData(null);
       setShowLevelUp(false);
       try {
-        const data = await getLesson(trailId, lessonId);
+        // trailId pode faltar se a página for recarregada com um link incompleto
+        const data = await getLesson(trailId ?? 'trail_golpes', lessonId);
         setLesson(data);
       } catch (err) {
         console.error('Erro ao carregar lição:', err);
@@ -62,10 +66,28 @@ export default function LessonRunnerScreen() {
     load();
   }, [trailId, lessonId]);
 
-  if (loading || !lesson) {
+  if (loading) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color={colors.primary} accessibilityLabel="Carregando lição" />
+      </View>
+    );
+  }
+
+  // Lição não encontrada (ID inválido no link): antes ficava carregando para sempre
+  if (!lesson) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+        <Text style={{ color: colors.text, fontSize: fontSize('title'), fontWeight: 'bold', marginBottom: 16, textAlign: 'center' }}>
+          Lição não encontrada
+        </Text>
+        <TouchableOpacity
+          onPress={navigateBackToTrail}
+          accessibilityRole="button"
+          style={{ backgroundColor: colors.primary, borderRadius: 16, paddingVertical: 14, paddingHorizontal: 24 }}
+        >
+          <Text style={{ color: colors.onPrimary, fontWeight: 'bold', fontSize: fontSize('body') }}>Voltar para a trilha</Text>
+        </TouchableOpacity>
       </View>
     );
   }

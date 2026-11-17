@@ -21,7 +21,7 @@ import { showAlert } from '@/utils/alert';
 
 export default function RegisterScreen() {
   const { colors, fs, highContrast } = useAppTheme();
-  const { setUser } = useUserStore();
+  const setUser = useUserStore((s) => s.setUser);
   const [name, setName]         = useState('');
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
