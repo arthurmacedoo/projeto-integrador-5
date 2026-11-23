@@ -296,8 +296,15 @@ async function startSpeaking(text: string, rate: number, voiceId?: string | null
   useSpeechStatus.setState({ speakingText: text });
 
   const voice = await getPortugueseVoice(voiceId);
-  // Chrome às vezes ignora uma fala pedida logo depois de cancelar a anterior
-  if (Platform.OS === 'web') await new Promise((r) => setTimeout(r, 60));
+  // Chrome às vezes ignora ou pausa uma fala pedida logo depois de cancelar a anterior
+  if (Platform.OS === 'web') {
+    await new Promise((r) => setTimeout(r, 60));
+    try {
+      window.speechSynthesis.resume();
+    } catch {
+      /* ignora */
+    }
+  }
   if (run !== currentRun) return; // outra fala começou (ou parou) enquanto esperávamos
 
   const finish = () => {
