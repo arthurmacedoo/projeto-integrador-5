@@ -22,12 +22,13 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // ── 1. NÍVEIS DE XP ──────────────────────────────────────────
+// Total máximo da trilha MVP (8 lições) = 570 XP → todos os 5 níveis são alcançáveis
 const levels = [
   { level: 1, name: 'Iniciante', xpRequired: 0, avatarVariantUnlocked: 1 },
-  { level: 2, name: 'Aprendiz', xpRequired: 150, avatarVariantUnlocked: 2 },
-  { level: 3, name: 'Consciente', xpRequired: 350, avatarVariantUnlocked: 3 },
-  { level: 4, name: 'Estrategista', xpRequired: 600, avatarVariantUnlocked: 4 },
-  { level: 5, name: 'Guardião Financeiro', xpRequired: 900, avatarVariantUnlocked: 5 },
+  { level: 2, name: 'Aprendiz', xpRequired: 100, avatarVariantUnlocked: 2 },
+  { level: 3, name: 'Consciente', xpRequired: 250, avatarVariantUnlocked: 3 },
+  { level: 4, name: 'Estrategista', xpRequired: 420, avatarVariantUnlocked: 4 },
+  { level: 5, name: 'Guardião Financeiro', xpRequired: 550, avatarVariantUnlocked: 5 },
 ];
 
 // ── 2. TRILHA PRINCIPAL ──────────────────────────────────────

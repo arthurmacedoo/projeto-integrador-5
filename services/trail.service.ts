@@ -41,6 +41,19 @@ export async function getTrails(): Promise<Trail[]> {
   return FALLBACK_TRAILS;
 }
 
+// ── Busca metadados de uma trilha específica ──────────────
+export async function getTrail(trailId: string): Promise<Trail | null> {
+  try {
+    const snap = await getDoc(doc(db, 'trails', trailId));
+    if (snap.exists()) {
+      return { id: snap.id, ...snap.data() } as Trail;
+    }
+  } catch (err) {
+    console.warn('Usando fallback local da trilha:', err);
+  }
+  return FALLBACK_TRAILS.find((t) => t.id === trailId) ?? FALLBACK_TRAILS[0] ?? null;
+}
+
 // ── Busca sumário das lições de uma trilha ────────────────
 export async function getLessonsForTrail(
   trailId: string
@@ -67,7 +80,7 @@ export async function getLessonsForTrail(
     .sort((a, b) => a.order - b.order)
     .map((l) => ({
       id: l.id,
-      title: `${l.order}. ${l.title}`,
+      title: l.title.startsWith(`${l.order}.`) ? l.title : `${l.order}. ${l.title}`,
       order: l.order,
       xpReward: l.xpReward,
     }));

@@ -37,7 +37,10 @@ export default function TrailsScreen() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ padding: 24, paddingTop: 56 }}>
-        <Text style={{ color: colors.text, fontSize: fs(28), fontWeight: 'bold', marginBottom: 6 }}>
+        <Text
+          accessibilityRole="header"
+          style={{ color: colors.text, fontSize: fs(28), fontWeight: 'bold', marginBottom: 6 }}
+        >
           Trilhas de Aprendizado 📚
         </Text>
         <Text style={{ color: colors.textMuted, fontSize: fs(14), marginBottom: 28 }}>
@@ -48,9 +51,10 @@ export default function TrailsScreen() {
           <TouchableOpacity
             key={trail.id}
             onPress={() => router.push(`/(app)/trails/${trail.id}` as any)}
+            accessibilityRole="button"
+            accessibilityLabel={`Acessar trilha ${trail.title}. ${trail.description}`}
             style={{
               backgroundColor: colors.surface,
-              ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
               borderRadius: 20,
               padding: 20,
               marginBottom: 16,
@@ -59,7 +63,7 @@ export default function TrailsScreen() {
             }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-              <Text style={{ fontSize: fs(32), marginRight: 12 }}>🛡️</Text>
+              <Text style={{ fontSize: fs(32), marginRight: 12 }} importantForAccessibility="no">🛡️</Text>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: colors.text, fontSize: fs(18), fontWeight: 'bold' }}>
                   {trail.title}
@@ -86,7 +90,11 @@ export default function TrailsScreen() {
         ))}
 
         {/* Trilhas de Expansão (v2) */}
-        <Text style={{ color: colors.textSubtle, fontSize: fs(13), fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>
+        <Text
+          accessibilityRole="header"
+          aria-level={2}
+          style={{ color: colors.textSubtle, fontSize: fs(13), fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}
+        >
           PRÓXIMAS TRILHAS EM DESENVOLVIMENTO
         </Text>
 
@@ -97,6 +105,8 @@ export default function TrailsScreen() {
         ].map((t) => (
           <View
             key={t.title}
+            accessible
+            accessibilityLabel={`${t.title}, em breve. ${t.desc}`}
             style={{
               backgroundColor: colors.surfaceSoft,
               borderRadius: 16,
@@ -108,12 +118,12 @@ export default function TrailsScreen() {
               alignItems: 'center',
             }}
           >
-            <Text style={{ fontSize: fs(26), marginRight: 14 }}>{t.emoji}</Text>
+            <Text style={{ fontSize: fs(26), marginRight: 14 }} importantForAccessibility="no">{t.emoji}</Text>
             <View style={{ flex: 1 }}>
               <Text style={{ color: colors.textMuted, fontSize: fs(15), fontWeight: 'bold' }}>{t.title}</Text>
               <Text style={{ color: colors.textSubtle, fontSize: fs(12), marginTop: 2 }}>{t.desc}</Text>
             </View>
-            <Text style={{ fontSize: fs(16) }}>🔒</Text>
+            <Text style={{ fontSize: fs(16) }} importantForAccessibility="no">🔒</Text>
           </View>
         ))}
       </View>

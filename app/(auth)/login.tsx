@@ -35,9 +35,13 @@ export default function LoginScreen() {
       // O observer em _layout.tsx redireciona automaticamente
     } catch (err: any) {
       const msg =
-        err.code === 'auth/invalid-credential'
+        err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found'
           ? 'E-mail ou senha incorretos.'
-          : 'Erro ao fazer login. Tente novamente.';
+          : err.code === 'auth/invalid-email'
+            ? 'Digite um endereço de e-mail válido.'
+            : err.code === 'auth/network-request-failed'
+              ? 'Sem conexão com a internet. Verifique sua rede e tente novamente.'
+              : 'Erro ao fazer login. Tente novamente.';
       showAlert('Erro', msg);
     } finally {
       setLoading(false);
@@ -51,7 +55,10 @@ export default function LoginScreen() {
     >
       <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
         {/* Logo / Título */}
-        <Text style={{ fontSize: fs(36), fontWeight: 'bold', color: colors.primary, marginBottom: 8 }}>
+        <Text
+          accessibilityRole="header"
+          style={{ fontSize: fs(36), fontWeight: 'bold', color: colors.primaryText, marginBottom: 8 }}
+        >
           💰 TchôEduca
         </Text>
         <Text style={{ fontSize: fs(16), color: colors.textMuted, marginBottom: 40 }}>
@@ -67,11 +74,13 @@ export default function LoginScreen() {
           placeholderTextColor={colors.textFaint}
           keyboardType="email-address"
           autoCapitalize="none"
+          accessibilityLabel="E-mail"
           style={{
             backgroundColor: colors.surface,
             ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
             borderRadius: 12,
             padding: 14,
+            minHeight: 48,
             color: colors.textStrong,
             marginBottom: 16,
             fontSize: fs(16),
@@ -87,21 +96,33 @@ export default function LoginScreen() {
             placeholder="Mínimo 8 caracteres"
             placeholderTextColor={colors.textFaint}
             secureTextEntry={!showPass}
+            accessibilityLabel="Senha"
             style={{
               flex: 1,
               backgroundColor: colors.surface,
               ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
               borderRadius: 12,
               padding: 14,
+              paddingRight: 52,
+              minHeight: 48,
               color: colors.textStrong,
               fontSize: fs(16),
             }}
           />
           <TouchableOpacity
             onPress={() => setShowPass(!showPass)}
-            style={{ position: 'absolute', right: 14 }}
+            accessibilityRole="button"
+            accessibilityLabel={showPass ? 'Ocultar senha' : 'Mostrar senha'}
+            style={{
+              position: 'absolute',
+              right: 4,
+              minWidth: 48,
+              minHeight: 48,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
           >
-            <Text style={{ color: colors.textSubtle, fontSize: fs(18) }}>
+            <Text style={{ color: colors.textSubtle, fontSize: fs(18) }} importantForAccessibility="no">
               {showPass ? '🙈' : '👁️'}
             </Text>
           </TouchableOpacity>
@@ -111,11 +132,16 @@ export default function LoginScreen() {
         <TouchableOpacity
           onPress={handleLogin}
           disabled={loading}
+          accessibilityRole="button"
+          accessibilityLabel="Entrar na conta"
+          accessibilityState={{ disabled: loading }}
           style={{
             backgroundColor: colors.primary,
             borderRadius: 14,
             padding: 16,
+            minHeight: 52,
             alignItems: 'center',
+            justifyContent: 'center',
             opacity: loading ? 0.7 : 1,
           }}
         >

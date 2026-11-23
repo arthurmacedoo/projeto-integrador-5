@@ -121,4 +121,5 @@ export type RootStackParamList = {
   '(app)/trails/[trailId]': { trailId: string };
   '(app)/trails/lesson/[lessonId]': { trailId: string; lessonId: string };
   '(app)/profile': undefined;
+  '(app)/accessibility': undefined;
 };

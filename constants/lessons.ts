@@ -1,12 +1,15 @@
+// ──────────────────────────────────────────────────────────────
 // constants/lessons.ts
-// Fallback completo e offline das 8 lições da Trilha Golpes Pix/WhatsApp
+// Fallback completo e offline das 8 lições da Trilha Golpes Pix/WhatsApp.
+// Alinhado 100% com scripts/seed.mjs e com os documentos do Firestore.
+// ──────────────────────────────────────────────────────────────
 import type { Lesson } from '@/types';
 
 export const ALL_LESSONS: Record<string, Lesson> = {
   lesson_01: {
     id: 'lesson_01',
     trailId: 'trail_golpes',
-    title: 'A Mensagem Suspeita',
+    title: '1. A Mensagem Suspeita',
     order: 1,
     xpReward: 50,
     slides: [
@@ -32,7 +35,7 @@ export const ALL_LESSONS: Record<string, Lesson> = {
           },
           {
             id: 'C',
-            text: 'Responder a mensagem pedindo comprovante e mandando seus dados.',
+            text: 'Responder a mensagem pedindo comprovante e mandando a senha.',
             isCorrect: false,
           },
         ],
@@ -67,33 +70,33 @@ export const ALL_LESSONS: Record<string, Lesson> = {
   lesson_02: {
     id: 'lesson_02',
     trailId: 'trail_golpes',
-    title: 'O Link do Banco',
+    title: '2. O Parente em Apuros',
     order: 2,
     xpReward: 60,
     slides: [
       {
         type: 'narrative',
-        character: 'joao',
-        text: 'João recebe um SMS dizendo: "Banco Alerta: Atualização de segurança obrigatória pendente no seu token Pix. Evite o cancelamento da sua chave acessando: banco-seguranca-pix.meuapp.net".',
+        character: 'dona_cida',
+        text: 'Dona Cida recebe uma mensagem no WhatsApp com a foto do seu filho: "Oi mãe, troquei de número porque meu celular estragou. Estou no mecânico e preciso de R$ 450 urgente no Pix para liberar o carro. Pode transferir pra essa chave?"',
         background: 'phone_screen',
       },
       {
         type: 'decision',
-        question: 'Como João deve verificar a autenticidade dessa notificação?',
+        question: 'Como Dona Cida deve agir para não cair no Golpe do Novo Número?',
         options: [
           {
             id: 'A',
-            text: 'Acessar o link pelo celular para atualizar o token rapidamente.',
+            text: 'Fazer o Pix na hora, afinal é o filho dela pedindo socorro.',
             isCorrect: false,
           },
           {
             id: 'B',
-            text: 'Desconfiar do link estranho, não clicar e abrir diretamente o app do seu banco.',
+            text: 'Ligar para o número antigo do filho ou fazer uma chamada de vídeo.',
             isCorrect: true,
           },
           {
             id: 'C',
-            text: 'Encaminhar o SMS para parentes perguntando se eles também receberam.',
+            text: 'Mandar mensagem no novo número perguntando se está tudo bem.',
             isCorrect: false,
           },
         ],
@@ -102,22 +105,22 @@ export const ALL_LESSONS: Record<string, Lesson> = {
         type: 'consequence',
         forOption: 'A',
         isNegative: true,
-        text: 'O link direcionava para um site clonado. Ao tentar "atualizar o token", João entregou a chave de acesso da sua conta para criminosos.',
-        tip: 'Bancos não enviam links por SMS pedindo atualização de cadastros ou tokens de segurança.',
+        text: 'Dona Cida transferiu R$ 450 para a conta de um laranja. Mais tarde, quando o filho chegou em casa, ela descobriu que ele nunca trocou de número.',
+        tip: 'Golpistas pegam fotos de redes sociais e fingem ser parentes com urgências falsas.',
       },
       {
         type: 'consequence',
         forOption: 'B',
         isNegative: false,
-        text: 'Decisão perfeita! João reparou que o endereço do site não era o oficial do banco. No app legítimo, confirmou que tudo estava em ordem.',
-        tip: 'Sempre verifique o domínio do site e nunca clique em links enviados por mensagens de texto.',
+        text: 'Perfeito! Dona Cida ligou para o número antigo do filho, que atendeu normalmente e confirmou que não era ele. Ela evitou o prejuízo!',
+        tip: 'Sempre confirme a identidade por ligação de voz, chamada de vídeo ou pergunta pessoal que só a pessoa sabe.',
       },
       {
         type: 'consequence',
         forOption: 'C',
         isNegative: true,
-        text: 'Encaminhar links suspeitos pode espalhar o golpe e fazer amigos ou familiares caírem na armadilha.',
-        tip: 'Não compartilhe mensagens duvidosas antes de checar a veracidade nos canais oficiais.',
+        text: 'O golpista respondeu com mais mentiras convincentes e insistiu no Pix.',
+        tip: 'Não tente tirar dúvidas pelo próprio chat suspeito. Ligue diretamente para a pessoa.',
       },
       {
         type: 'xp_reward',
@@ -128,33 +131,33 @@ export const ALL_LESSONS: Record<string, Lesson> = {
   lesson_03: {
     id: 'lesson_03',
     trailId: 'trail_golpes',
-    title: 'A Promoção Imperdível',
+    title: '3. A Promoção Imperdível',
     order: 3,
     xpReward: 60,
     slides: [
       {
         type: 'narrative',
         character: 'joao',
-        text: 'Depois do trabalho, João vê um anúncio nas redes sociais de uma Smart TV por R$ 499 (preço normal R$ 2.400). A loja virtual diz que a promoção relâmpago é válida só para quem pagar agora via Pix para uma chave de pessoa física.',
+        text: 'Navegando nas redes sociais, João vê um anúncio patrocinado: "Smart TV 55 polegadas 4K por apenas R$ 499,00! Últimas unidades! Pagamento exclusivo via Chave Pix." O site tem visual idêntico a uma grande loja.',
         background: 'shopping',
       },
       {
         type: 'decision',
-        question: 'O que João deve fazer diante desse superdesconto?',
+        question: 'Qual é o sinal de alerta e o que João deve fazer?',
         options: [
           {
             id: 'A',
-            text: 'Pagar logo por Pix para não perder o desconto antes que o estoque acabe.',
+            text: 'Comprar imediatamente antes que acabe o estoque.',
             isCorrect: false,
           },
           {
             id: 'B',
-            text: 'Desconfiar do preço fora da realidade e pesquisar a reputação da loja em fontes independentes.',
+            text: 'Desconfiar do preço fora da realidade e checar o endereço do site oficial.',
             isCorrect: true,
           },
           {
             id: 'C',
-            text: 'Confiar apenas nos depoimentos que estão dentro do próprio anúncio e fazer o Pix.',
+            text: 'Fazer Pix para pessoa física que aparece como recebedor.',
             isCorrect: false,
           },
         ],
@@ -163,22 +166,22 @@ export const ALL_LESSONS: Record<string, Lesson> = {
         type: 'consequence',
         forOption: 'A',
         isNegative: true,
-        text: 'Nesta simulação, a oferta era falsa. Pagar por Pix para pessoa física desconhecida colocou o dinheiro de João em risco, sem produto entregue e sem como estornar.',
-        tip: 'Desconfie de preços muito abaixo da média de mercado e de exigência exclusiva de Pix para CPF de terceiros.',
+        text: 'João fez o Pix e o produto nunca chegou. O site falso foi tirado do ar 2 horas depois.',
+        tip: 'Preços milagrosos e exigência de pagamento apenas por Pix para pessoa física são fortes indícios de golpe.',
       },
       {
         type: 'consequence',
         forOption: 'B',
         isNegative: false,
-        text: 'João pesquisou a loja fora do anúncio e encontrou centenas de reclamações de fraude. Ao não pagar, ele protegeu seu dinheiro suado.',
-        tip: 'Pesquise a reputação no Reclame Aqui e confirme se o CNPJ é verdadeiro antes de comprar em sites novos.',
+        text: 'Muito consciente! João viu que o link era "loja-promocoes-ofertas.xyz" e não o site oficial. Ele denunciou o anúncio falso.',
+        tip: 'Sempre confira a URL (endereço) do site e pesquise a reputação da loja no Reclame Aqui.',
       },
       {
         type: 'consequence',
         forOption: 'C',
         isNegative: true,
-        text: 'Depoimentos em páginas de anúncios falsos são facilmente criados pelos próprios fraudadores.',
-        tip: 'Nunca use avaliações do próprio anúncio como prova de segurança.',
+        text: 'Lojas grandes não recebem pagamentos em contas de pessoas físicas desconhecidas.',
+        tip: 'Grandes empresas emitem Pix com CNPJ oficial correspondente à razão social da marca.',
       },
       {
         type: 'xp_reward',
@@ -189,33 +192,33 @@ export const ALL_LESSONS: Record<string, Lesson> = {
   lesson_04: {
     id: 'lesson_04',
     trailId: 'trail_golpes',
-    title: 'O Parente em Apuros',
+    title: '4. A Falsa Vaga de Emprego',
     order: 4,
     xpReward: 70,
     slides: [
       {
         type: 'narrative',
-        character: 'dona_cida',
-        text: 'Dona Cida recebe uma mensagem no WhatsApp com a foto do seu filho: "Oi mãe, troquei de número porque meu celular caiu e estragou. Estou no mecânico e preciso de R$ 450 urgente no Pix para liberar o carro. Pode transferir pra essa chave?"',
-        background: 'phone_screen',
+        character: 'joao',
+        text: 'Chega uma mensagem no SMS: "Parabéns! Você foi selecionado para uma vaga de assistente remoto (R$ 3.800/mês). Para liberação do treinamento e equipamentos, pague a taxa de cadastro de R$ 90 via Pix."',
+        background: 'job',
       },
       {
         type: 'decision',
-        question: 'Como Dona Cida deve agir para não cair no Golpe do Novo Número?',
+        question: 'O que você deve fazer ao receber essa proposta?',
         options: [
           {
             id: 'A',
-            text: 'Fazer o Pix na hora, afinal é a foto do filho dela pedindo socorro.',
+            text: 'Pagar a taxa, pois o salário prometido compensa o pequeno investimento.',
             isCorrect: false,
           },
           {
             id: 'B',
-            text: 'Ligar para o número antigo do filho ou fazer uma chamada de vídeo para confirmar.',
+            text: 'Recusar e bloquear. Nenhuma empresa séria cobra taxa para contratar.',
             isCorrect: true,
           },
           {
             id: 'C',
-            text: 'Responder no chat suspeito perguntando os dados do mecânico.',
+            text: 'Pedir desconto na taxa de inscrição.',
             isCorrect: false,
           },
         ],
@@ -224,22 +227,22 @@ export const ALL_LESSONS: Record<string, Lesson> = {
         type: 'consequence',
         forOption: 'A',
         isNegative: true,
-        text: 'Dona Cida transferiu R$ 450 para a conta de um criminoso. Mais tarde, quando o filho chegou em casa, ela descobriu que ele nunca trocou de número.',
-        tip: 'Golpistas copiam fotos de perfis públicos em redes sociais para fingir urgências familiares.',
+        text: 'Após pagar os R$ 90, o contato bloqueou João. A vaga não existia.',
+        tip: 'Cobrança de material, teste ou taxa de cadastro em processo seletivo é fraude.',
       },
       {
         type: 'consequence',
         forOption: 'B',
         isNegative: false,
-        text: 'Perfeito! Dona Cida ligou para o número antigo do filho, que atendeu tranquilamente e confirmou que estava tudo bem. O golpe foi desarmado!',
-        tip: 'Sempre confirme pedidos urgentes de dinheiro por ligação de voz ou chamada de vídeo.',
+        text: 'Exato! Empresas idôneas arcam com os custos de seus processos seletivos. João protegeu seu bolso.',
+        tip: 'Desconfie de salários muito altos para funções sem exigência de experiência prévia.',
       },
       {
         type: 'consequence',
         forOption: 'C',
         isNegative: true,
-        text: 'O golpista inventou mais histórias e dados falsos, pressionando Dona Cida até ela pagar.',
-        tip: 'Não tente tirar dúvidas pelo próprio chat suspeito. Ligue diretamente para quem você conhece.',
+        text: 'Negociar com golpistas só abre espaço para que eles criem novas artimanhas para te enganar.',
+        tip: 'Corte contato imediatamente diante de pedidos de pagamento antecipado.',
       },
       {
         type: 'xp_reward',
@@ -250,33 +253,33 @@ export const ALL_LESSONS: Record<string, Lesson> = {
   lesson_05: {
     id: 'lesson_05',
     trailId: 'trail_golpes',
-    title: 'A Vaga de Emprego',
+    title: '5. O Golpe do Pix Agendado / Falso Comprovante',
     order: 5,
     xpReward: 70,
     slides: [
       {
         type: 'narrative',
-        character: 'joao',
-        text: 'Chega uma mensagem no WhatsApp: "Parabéns! Seu currículo foi aprovado para vaga remota de Digitador (R$ 3.800/mês, 4h por dia). Para envio do notebook da empresa e cadastro no RH, transfira a taxa de seguro de R$ 90 via Pix."',
-        background: 'job',
+        character: 'carlos',
+        text: 'Carlos vendeu um lanche grande por entrega. O cliente enviou um print de comprovante de Pix no valor de R$ 120 e disse: "Já paguei, manda o motoboy agora!". No print, em letras miúdas, está escrito "Agendamento de Pix".',
+        background: 'store',
       },
       {
         type: 'decision',
-        question: 'O que João deve fazer ao receber essa proposta de trabalho?',
+        question: 'Como Carlos deve proceder antes de entregar o pedido?',
         options: [
           {
             id: 'A',
-            text: 'Pagar a taxa de R$ 90, afinal o salário alto vai compensar com sobra.',
+            text: 'Liberar a entrega imediatamente com base no print do WhatsApp.',
             isCorrect: false,
           },
           {
             id: 'B',
-            text: 'Recusar e bloquear. Nenhuma empresa séria cobra taxa para contratar funcionários.',
+            text: 'Abrir a conta bancária da empresa e só entregar após o dinheiro cair no saldo disponível.',
             isCorrect: true,
           },
           {
             id: 'C',
-            text: 'Pedir para parcelar a taxa no primeiro pagamento de salário.',
+            text: 'Acreditar porque o comprovante tem o nome dele.',
             isCorrect: false,
           },
         ],
@@ -285,22 +288,22 @@ export const ALL_LESSONS: Record<string, Lesson> = {
         type: 'consequence',
         forOption: 'A',
         isNegative: true,
-        text: 'Após receber os R$ 90, o golpista bloqueou João imediatamente. O emprego dos sonhos era apenas uma isca.',
-        tip: 'Cobrança antecipada de taxa para treinamento, exame ou equipamento em seleção de emprego é SEMPRE fraude.',
+        text: 'Carlos enviou o lanche e o cliente cancelou o agendamento do Pix logo em seguida. Carlos ficou no prejuízo!',
+        tip: 'Prints de comprovante podem ser editados ou agendados e cancelados a qualquer momento.',
       },
       {
         type: 'consequence',
         forOption: 'B',
         isNegative: false,
-        text: 'Excelente! João lembrou que processos seletivos reais nunca exigem pagamentos do candidato. Ele protegeu seu bolso e denunciou o número.',
-        tip: 'Empresas sérias arcam com seus próprios custos operacionais de contratação.',
+        text: 'Perfeita postura profissional! Carlos checou seu extrato e viu que o dinheiro não havia caído. Ele pediu o pagamento instantâneo antes de despachar.',
+        tip: 'Pix cai em poucos segundos. Nunca libere mercadorias sem conferir o saldo real na sua conta.',
       },
       {
         type: 'consequence',
         forOption: 'C',
         isNegative: true,
-        text: 'Tentar negociar manteve João em contato com fraudadores que tentaram outros golpes.',
-        tip: 'Corte contato imediatamente diante de qualquer pedido de pagamento antecipado em vagas de emprego.',
+        text: 'Agendamentos podem ser cancelados facilmente no app do banco antes do horário agendado.',
+        tip: 'Pix efetuado é diferente de Pix agendado.',
       },
       {
         type: 'xp_reward',
@@ -311,33 +314,33 @@ export const ALL_LESSONS: Record<string, Lesson> = {
   lesson_06: {
     id: 'lesson_06',
     trailId: 'trail_golpes',
-    title: 'O Bilhete Premiado',
+    title: '6. A Falsa Central de Segurança',
     order: 6,
     xpReward: 80,
     slides: [
       {
         type: 'narrative',
         character: 'dona_cida',
-        text: 'Dona Cida recebe uma notificação: "Seu número foi sorteado na Promoção Felicidade Financeira! Você ganhou R$ 50.000. Para liberar o depósito do prêmio no seu Pix, envie o pagamento de R$ 150 referente à taxa de custódia federal."',
-        background: 'trophy',
+        text: 'Dona Cida atende uma ligação com voz profissional: "Aqui é da Central de Prevenção a Fraudes do seu banco. Detectamos uma compra suspeita de R$ 2.800 nas Casas Bahia. Para cancelar, você precisa transferir seu saldo para uma conta de segurança temporária."',
+        background: 'phone_call',
       },
       {
         type: 'decision',
-        question: 'Como Dona Cida deve reagir a essa premiação?',
+        question: 'O que Dona Cida deve fazer diante dessa ligação?',
         options: [
           {
             id: 'A',
-            text: 'Pagar os R$ 150 rápido para não perder o prêmio de R$ 50.000.',
+            text: 'Seguir as orientações e transferir o dinheiro para a "conta segura".',
             isCorrect: false,
           },
           {
             id: 'B',
-            text: 'Ignorar e apagar a mensagem. Não existe prêmio em sorteio que você nunca participou.',
+            text: 'Desligar a chamada na hora e ligar para o telefone que fica no verso do seu cartão físico.',
             isCorrect: true,
           },
           {
             id: 'C',
-            text: 'Mandar a chave Pix e pedir para descontarem os R$ 150 do valor do prêmio.',
+            text: 'Passar a senha do cartão para o atendente verificar no sistema.',
             isCorrect: false,
           },
         ],
@@ -346,22 +349,22 @@ export const ALL_LESSONS: Record<string, Lesson> = {
         type: 'consequence',
         forOption: 'A',
         isNegative: true,
-        text: 'Dona Cida pagou os R$ 150 e em seguida os golpistas pediram mais R$ 300 de "impostos". O prêmio nunca existiu.',
-        tip: 'Prêmios legítimos nunca exigem pagamento prévio para serem resgatados.',
+        text: 'Essa "conta de segurança" é a conta dos próprios criminosos! Nenhum banco tem esse procedimento.',
+        tip: 'Bancos JAMAIS solicitam transferências para "proteger" ou "estornar" seu saldo.',
       },
       {
         type: 'consequence',
         forOption: 'B',
         isNegative: false,
-        text: 'Dona Cida agiu com muita esperteza! Lembrou que não havia entrado em nenhum sorteio e apagou o golpe na hora.',
-        tip: 'Se você não participou de nenhum sorteio oficial registrado pela Caixa/Receita, não há prêmio algum a receber.',
+        text: 'Excelente! Dona Cida desligou imediatamente, ligou pelo número oficial do verso do cartão e descobriu que não havia compra alguma.',
+        tip: 'Se receber ligação de "central de segurança", desligue e faça você mesmo a ligação para o canal oficial.',
       },
       {
         type: 'consequence',
         forOption: 'C',
         isNegative: true,
-        text: 'Ao insistir, o golpista solicitou dados pessoais e documentos que poderiam ser usados em novas fraudes.',
-        tip: 'Nunca envie documentos pessoais ou dados bancários para contatos desconhecidos.',
+        text: 'Senhas nunca devem ser digitadas ou faladas ao telefone para supostos operadores.',
+        tip: 'Os bancos nunca pedem senha da conta ou código de segurança por telefone.',
       },
       {
         type: 'xp_reward',
@@ -372,33 +375,33 @@ export const ALL_LESSONS: Record<string, Lesson> = {
   lesson_07: {
     id: 'lesson_07',
     trailId: 'trail_golpes',
-    title: 'A Chave Pix Errada',
+    title: '7. O Golpe do Pix por Engano e Devolução Manual',
     order: 7,
     xpReward: 80,
     slides: [
       {
         type: 'narrative',
         character: 'carlos',
-        text: 'Carlos recebe um Pix de R$ 300 de um desconhecido. Minutos depois, uma pessoa desesperada manda mensagem: "Moço, transferi errado o dinheiro do remédio do meu filho! Por favor, faz um Pix de volta pra chave da minha mãe (outro CPF)?"',
+        text: 'Carlos recebe R$ 300 de um desconhecido via Pix. Logo em seguida, uma pessoa desesperada manda mensagem: "Por favor, errei a chave e mandei o dinheiro do remédio do meu filho! Faz um Pix de volta para a chave da minha esposa (outro CPF)?"',
         background: 'chat',
       },
       {
         type: 'decision',
-        question: 'Qual é o procedimento correto e seguro para devolver esse valor?',
+        question: 'Qual é a forma correta e segura de devolver esse Pix?',
         options: [
           {
             id: 'A',
-            text: 'Fazer uma nova transferência Pix para a chave diferente que a pessoa passou.',
+            text: 'Fazer uma nova transferência Pix para a chave diferente indicada pela pessoa.',
             isCorrect: false,
           },
           {
             id: 'B',
-            text: 'Utilizar exclusivamente o botão oficial "Devolver Valor" no extrato do seu próprio banco.',
+            text: 'Usar exclusivamente a função oficial "Devolver Pix" dentro do próprio extrato do banco.',
             isCorrect: true,
           },
           {
             id: 'C',
-            text: 'Ficar com o dinheiro, já que o erro foi da outra pessoa.',
+            text: 'Ficar com o dinheiro e não devolver.',
             isCorrect: false,
           },
         ],
@@ -407,22 +410,22 @@ export const ALL_LESSONS: Record<string, Lesson> = {
         type: 'consequence',
         forOption: 'A',
         isNegative: true,
-        text: 'Cuidado com o Golpe do MED! Ao fazer um novo Pix para outra conta, o golpista ainda pede o estorno oficial no banco dele. Você perde o valor duas vezes!',
-        tip: 'Nunca faça um novo Pix avulso. Use sempre a funcionalidade oficial de Devolução do Pix.',
+        text: 'Cuidado com o Golpe do MED (Mecanismo Especial de Devolução)! O golpista pede para você transferir para outra conta e depois aciona o banco para estornar o Pix original. Você perde o dinheiro duas vezes!',
+        tip: 'Nunca faça um novo Pix manual para outra chave. Use sempre o botão oficial "Devolver Valor".',
       },
       {
         type: 'consequence',
         forOption: 'B',
         isNegative: false,
-        text: 'Carlos agiu com total segurança e honestidade! O botão "Devolver" devolve o dinheiro exatamente para a conta pagadora de origem sem risco de fraude.',
-        tip: 'O recurso oficial de devolução do Banco Central estorna o valor com rastreabilidade total.',
+        text: 'Perfeito! Ao usar a função "Devolver", o sistema do Banco Central retorna o dinheiro exatamente para a conta de origem de forma rastreável e segura, sem risco de golpe duplo.',
+        tip: 'A funcionalidade nativa de devolução do Pix protege você contra fraudes de estorno.',
       },
       {
         type: 'consequence',
         forOption: 'C',
         isNegative: true,
-        text: 'Apropriar-se de dinheiro recebido por engano é crime de apropriação indébita (Artigo 169 do Código Penal).',
-        tip: 'Sempre faça a devolução pelo canal oficial para manter sua conta segura e dentro da lei.',
+        text: 'Apropriar-se de valores recebidos por engano é crime de apropriação indébita (Art. 169 do Código Penal).',
+        tip: 'Sempre faça a devolução através do recurso oficial de devolução no seu app bancário.',
       },
       {
         type: 'xp_reward',
@@ -433,33 +436,33 @@ export const ALL_LESSONS: Record<string, Lesson> = {
   lesson_08: {
     id: 'lesson_08',
     trailId: 'trail_golpes',
-    title: 'Você é o Guardião',
+    title: '8. O Guardião Financeiro (Desafio Final)',
     order: 8,
     xpReward: 100,
     slides: [
       {
         type: 'narrative',
         character: 'assistente',
-        text: 'Parabéns por chegar ao desafio final da trilha! Agora você tem o conhecimento para proteger a si mesmo e orientar sua família e amigos na Baixada Cuiabana.',
+        text: 'Parabéns! Você chegou ao desafio final. Agora é sua vez de ser o Guardião! Dona Cida e João estão indecisos sobre como blindar a segurança de seus celulares no dia a dia.',
         background: 'trophy',
       },
       {
         type: 'decision',
-        question: 'Qual a combinação ideal de proteção no celular para blindar suas contas contra invasões?',
+        question: 'Qual conjunto de boas práticas você recomenda como Guardião?',
         options: [
           {
             id: 'A',
-            text: 'Ativar verificação em duas etapas com PIN no WhatsApp, configurar limite noturno de Pix baixo e usar biometria no celular.',
+            text: 'Ativar autenticação em duas etapas no WhatsApp com PIN, definir limite de Pix noturno baixo e nunca salvar senhas no bloco de notas.',
             isCorrect: true,
           },
           {
             id: 'B',
-            text: 'Usar a mesma senha fácil em todos os aplicativos para não esquecer e deixar limites ilimitados.',
+            text: 'Usar a mesma senha fácil em todas as contas e deixar o Pix sem limite para emergências.',
             isCorrect: false,
           },
           {
             id: 'C',
-            text: 'Desativar senhas de bloqueio de tela para poder atender rápido qualquer ligação.',
+            text: 'Desativar bloqueio de tela para acessar o celular mais rápido.',
             isCorrect: false,
           },
         ],
@@ -468,22 +471,22 @@ export const ALL_LESSONS: Record<string, Lesson> = {
         type: 'consequence',
         forOption: 'A',
         isNegative: false,
-        text: 'Você se tornou um verdadeiro Guardião Financeiro! Com 2FA, senhas fortes e limites bancários inteligentes, suas finanças digitais estão superprotegidas.',
-        tip: 'Espalhe essas dicas para comerciantes, vizinhos e parentes: conhecimento compartilhado é proteção comunitária!',
+        text: 'Você se tornou um verdadeiro Guardião Financeiro! Com 2FA ativado, limites noturnos ajustados e senhas fortes, você e sua comunidade estão protegidos contra as maiores ameaças digitais.',
+        tip: 'Compartilhe esse conhecimento com familiares, amigos e comerciantes locais da Baixada Cuiabana!',
       },
       {
         type: 'consequence',
         forOption: 'B',
         isNegative: true,
-        text: 'Senhas repetidas e falta de limites deixam suas finanças totalmente vulneráveis em caso de furto ou vazamento.',
-        tip: 'Senhas devem ser únicas e limites noturnos devem ser mantidos baixos.',
+        text: 'Senhas repetidas e ausência de limites deixam suas contas extremamente vulneráveis.',
+        tip: 'Configure sempre limites de segurança no seu app bancário para o período noturno.',
       },
       {
         type: 'consequence',
         forOption: 'C',
         isNegative: true,
-        text: 'Sem bloqueio de tela, qualquer pessoa que pegar seu aparelho terá acesso livre aos seus dados e contas bancárias.',
-        tip: 'O bloqueio do celular por biometria ou PIN é a primeira linha de defesa do cidadão.',
+        text: 'Sem bloqueio de tela, em caso de furto ou perda, qualquer pessoa acessa seus aplicativos bancários.',
+        tip: 'Mantenha biometria ou senha forte ativada no bloqueio do aparelho.',
       },
       {
         type: 'xp_reward',

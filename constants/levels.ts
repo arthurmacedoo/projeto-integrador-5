@@ -15,25 +15,25 @@ export const LEVELS: LevelConfig[] = [
   {
     level: 2,
     name: 'Aprendiz',
-    xpRequired: 150,
+    xpRequired: 100,
     avatarVariantUnlocked: 2,
   },
   {
     level: 3,
     name: 'Consciente',
-    xpRequired: 350,
+    xpRequired: 250,
     avatarVariantUnlocked: 3,
   },
   {
     level: 4,
     name: 'Estrategista',
-    xpRequired: 600,
+    xpRequired: 420,
     avatarVariantUnlocked: 4,
   },
   {
     level: 5,
     name: 'Guardião Financeiro',
-    xpRequired: 900,
+    xpRequired: 550,
     avatarVariantUnlocked: 5,
   },
 ];

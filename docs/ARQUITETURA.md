@@ -22,7 +22,6 @@ graph TB
     subgraph FIREBASE["☁️ Firebase (Google Cloud)"]
         AUTH["🔐 Firebase Auth\n(e-mail + senha)"]
         FS["📂 Cloud Firestore\n(banco principal)"]
-        FSSTORAGE["🖼️ Firebase Storage\n(avatares + assets)"]
     end
 
     UI <-->|"lê / dispara ações"| STORE
@@ -30,9 +29,8 @@ graph TB
     STORE <-->|"chama métodos"| SERVICES
     SERVICES <-->|"SDK Firebase"| AUTH
     SERVICES <-->|"SDK Firestore"| FS
-    SERVICES <-->|"SDK Storage"| FSSTORAGE
     FS <-.->|"sync automático\nquando offline"| CACHE
-    SERVICES <-.->|"lê do cache\nse sem internet"| CACHE
+    SERVICES <-.->|"lê do cache/fallback\nse sem internet"| CACHE
 
     style DEVICE fill:#1e293b,stroke:#3b82f6,color:#f1f5f9
     style EXPO fill:#0f172a,stroke:#6366f1,color:#f1f5f9
@@ -148,16 +146,16 @@ sequenceDiagram
 stateDiagram-v2
     [*] --> Nivel1 : Cadastro (XP = 0)
 
-    state "🟤 Nível 1 — Iniciante\n(0 XP)" as Nivel1
-    state "🟢 Nível 2 — Aprendiz\n(150 XP)" as Nivel2
-    state "🔵 Nível 3 — Consciente\n(350 XP)" as Nivel3
-    state "🟣 Nível 4 — Estrategista\n(600 XP)" as Nivel4
-    state "🟡 Nível 5 — Guardião Financeiro\n(900 XP)" as Nivel5
+    state "🌱 Nível 1 — Iniciante\n(0 XP)" as Nivel1
+    state "🎒 Nível 2 — Aprendiz\n(100 XP)" as Nivel2
+    state "💡 Nível 3 — Consciente\n(250 XP)" as Nivel3
+    state "🕶️ Nível 4 — Estrategista\n(420 XP)" as Nivel4
+    state "👑 Nível 5 — Guardião Financeiro\n(550 XP)" as Nivel5
 
-    Nivel1 --> Nivel2 : XP ≥ 150\nLevelUpModal exibido\navatarVariant → 2
-    Nivel2 --> Nivel3 : XP ≥ 350\nLevelUpModal exibido\navatarVariant → 3
-    Nivel3 --> Nivel4 : XP ≥ 600\nLevelUpModal exibido\navatarVariant → 4
-    Nivel4 --> Nivel5 : XP ≥ 900\nLevelUpModal exibido\navatarVariant → 5
+    Nivel1 --> Nivel2 : XP ≥ 100\nLevelUpModal exibido\navatarVariant → 2
+    Nivel2 --> Nivel3 : XP ≥ 250\nLevelUpModal exibido\navatarVariant → 3
+    Nivel3 --> Nivel4 : XP ≥ 420\nLevelUpModal exibido\navatarVariant → 4
+    Nivel4 --> Nivel5 : XP ≥ 550\nLevelUpModal exibido\navatarVariant → 5
     Nivel5 --> Nivel5 : XP continua acumulando\n(sem cap — prepara v2)
 
     note right of Nivel1
@@ -242,7 +240,8 @@ graph LR
             LESSON["lesson/[lessonId].tsx\n🎮 Engine de Lição\n• NarrativeSlide\n• DecisionSlide\n• ConsequenceSlide\n• XPRewardSlide"]
         end
 
-        PROFILE["profile.tsx\n👤 Perfil\n• Avatar grande\n• XP total\n• Histórico"]
+        PROFILE["profile.tsx\n👤 Perfil\n• Avatar evoluído\n• XP total\n• Histórico"]
+        ACCESSIBILITY["accessibility.tsx\n♿ Acessibilidade\n• Escala de texto\n• Alto contraste\n• Voz pt-BR (TTS)"]
     end
 
     MODAL["LevelUpModal.tsx\n🎉 Level Up!\n• Avatar antes/depois\n• Nome do novo nível"]

@@ -26,12 +26,14 @@ export const defaultColors = {
   textMuted: '#94a3b8',
   textSoft: '#cbd5e1',
   // Originais #64748b e #475569 tinham contraste abaixo do WCAG AA (3,7:1 e 2,4:1).
-  // Clareados para passar de 4,5:1 sobre os fundos do app.
-  textSubtle: '#8391a7',
-  textFaint: '#7c8aa0',
+  // Clareados para passar de 4,5:1 sobre TODOS os fundos do app (inclusive surface #1e293b).
+  textSubtle: '#8b99af',
+  textFaint: '#8b99af',
 
   // Marca / ações
-  primary: '#3b82f6',
+  // primary (#2563eb) garante contraste 5,17:1 com onPrimary (#ffffff) — passa no WCAG AA.
+  // Para texto/ícones azuis sobre fundo escuro, use sempre primaryText (#60a5fa, 5,75:1+).
+  primary: '#2563eb',
   primaryText: '#60a5fa',
   primarySoft: '#3b82f620',
   primaryBorder: '#3b82f660',
@@ -41,7 +43,8 @@ export const defaultColors = {
   // Estados
   success: '#4ade80',
   successBase: '#22c55e',
-  successDeep: '#059669',
+  // #047857 garante contraste 5,48:1 com onPrimary (#ffffff) no badge "Feito" (WCAG AA)
+  successDeep: '#047857',
   successSoft: '#05966920',
   successSoftDeep: '#064e3b20',
   danger: '#f87171',

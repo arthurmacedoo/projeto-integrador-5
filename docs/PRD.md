@@ -225,16 +225,16 @@ Cada lição é composta por N **slides** (documentos aninhados no Firestore). T
 
 **E4.F1 — Tabela de Níveis e XP**
 
-| Nível | Nome | XP Necessário (acumulado) | Mudança no Avatar |
+| Nível | Nome | XP Necessário (acumulado) | Mudança Visual no Avatar (`avatarVariant`) |
 |---|---|---|---|
-| 1 | Iniciante | 0 | Avatar base (roupa simples) |
-| 2 | Aprendiz | 150 | Adiciona acessório (mochila/bolsa) |
-| 3 | Consciente | 350 | Roupa muda de cor, expressão mais confiante |
-| 4 | Estrategista | 600 | Acessório premium (óculos/relógio) |
-| 5 | Guardião Financeiro | 900 | Visual completo, badge dourado no perfil |
+| 1 | Iniciante | 0 | Anel cinza-claro + insígnia 🌱 |
+| 2 | Aprendiz | 100 | Anel verde + insígnia 🎒 |
+| 3 | Consciente | 250 | Anel azul + insígnia 💡 |
+| 4 | Estrategista | 420 | Anel roxo + insígnia 🕶️ |
+| 5 | Guardião Financeiro | 550 | Anel dourado + coroa 👑 |
 
 > [!NOTE]
-> Com 8 lições e uma média de ~60 XP cada (considerando erros e acertos), o usuário completa a trilha com ~480 XP, chegando ao Nível 4. O Nível 5 é um objetivo de longo prazo, motivando o retorno para trilhas futuras.
+> Com 8 lições somando **570 XP** no máximo, todos os 5 níveis são alcançáveis no MVP: quem acerta quase todas as decisões conquista o título **Nível 5 — Guardião Financeiro** ao concluir o desafio final, enquanto quem erra algumas decisões ainda avança até os níveis 3–4 (abordagem não punitiva com 50% de XP).
 
 **E4.F2 — Atualização de Nível (Regra de Negócio)**
 - Após cada lição concluída, o sistema calcula o novo total de XP
@@ -268,13 +268,13 @@ Cada lição é composta por N **slides** (documentos aninhados no Firestore). T
 | # | Título | Tipo de Golpe Abordado | XP Recompensa |
 |---|---|---|---|
 | 1 | A Mensagem Suspeita | Phishing via WhatsApp ("estorno de Pix") | 50 |
-| 2 | O Link do Banco | Links falsos de notificação bancária | 60 |
-| 3 | A Promoção Imperdível | Compra online falsa com Pix | 60 |
-| 4 | O Parente em Apuros | Golpe do "filho pedindo dinheiro" | 70 |
-| 5 | A Vaga de Emprego | Golpe de falsa seleção com depósito | 70 |
-| 6 | O Bilhete Premiado | Golpe da loteria/sorteio via WhatsApp | 80 |
-| 7 | A Chave Pix Errada | Golpe do Pix "enviado por engano" | 80 |
-| 8 | Você é o Guardião | Cenário reverso: o usuário ajuda outro personagem | 100 |
+| 2 | O Parente em Apuros | Golpe do "novo número" / filho pedindo dinheiro | 60 |
+| 3 | A Promoção Imperdível | Compra online falsa com Pix (Smart TV) | 60 |
+| 4 | A Falsa Vaga de Emprego | Golpe de falsa seleção com taxa antecipada | 70 |
+| 5 | O Golpe do Pix Agendado / Falso Comprovante | Print de agendamento de Pix no comércio (Carlos) | 70 |
+| 6 | A Falsa Central de Segurança | Ligação falsa de "central antifraude" do banco | 80 |
+| 7 | O Golpe do Pix por Engano e Devolução Manual | Golpe do MED / devolução para chave de terceiros | 80 |
+| 8 | O Guardião Financeiro (Desafio Final) | Boas práticas de segurança (2FA, limite noturno, bloqueio) | 100 |
 
 **XP Total máximo da trilha (com acerto em todos): 570 XP**
 
@@ -295,14 +295,15 @@ Cada lição é composta por N **slides** (documentos aninhados no Firestore). T
 
 | Camada | Tecnologia | Justificativa |
 |---|---|---|
-| **Mobile** | React Native + Expo SDK | Cross-platform, APK Android sem Xcode, Expo Go para iOS |
+| **Mobile / Web** | React Native + Expo SDK 57 | Cross-platform (Android, iOS e Web SPA) |
 | **Linguagem** | TypeScript | Tipagem estática, segurança no modelo de dados do Firestore |
 | **Autenticação** | Firebase Authentication (e-mail/senha) | Zero infraestrutura própria, gestão de sessão automática |
-| **Banco de dados** | Cloud Firestore | NoSQL flexível, offline persistence nativa, tempo real |
-| **Armazenamento de mídia** | Firebase Storage | Imagens dos avatares e assets das lições |
+| **Banco de dados** | Cloud Firestore | NoSQL flexível, offline persistence nativa + fallback local em `constants/lessons.ts` |
+| **Acessibilidade & Voz** | Expo Speech / Web Speech API | Leitura em voz alta `pt-BR`, escala de texto e alto contraste WCAG AAA |
 | **Navegação** | Expo Router (file-based) | Padrão moderno do ecossistema Expo |
-| **Estado global** | Zustand | Leve, sem boilerplate, ideal para estado de sessão e XP |
-| **Estilo** | NativeWind (Tailwind para RN) | Produtividade e consistência visual |
+| **Estado global** | Zustand + AsyncStorage | Leve, sem boilerplate, persiste preferências de acessibilidade offline |
+| **Estilo** | StyleSheet + Tokens de Tema (`constants/theme.ts`) | Controle dinâmico de alto contraste e escala de fonte em todas as telas |
+| **Publicação Web** | GitHub Pages | Hospedagem pública estática com fallback SPA (`404.html`) |
 
 ### 7.2 Estrutura de Coleções no Firestore
 
@@ -348,14 +349,16 @@ firestore/
 ### 7.3 Estrutura de Pastas do Projeto (Expo Router)
 
 ```
-finEdu/
+tchoeduca/
 ├── app/
+│   ├── _layout.tsx              # Auth observer + OfflineBanner + foco teclado
 │   ├── (auth)/
 │   │   ├── login.tsx
 │   │   └── register.tsx
 │   ├── (app)/
-│   │   ├── _layout.tsx          # Bottom Tab Navigator
+│   │   ├── _layout.tsx          # Bottom Tab Navigator (Home | Trilhas | Perfil)
 │   │   ├── index.tsx            # Home / Dashboard
+│   │   ├── accessibility.tsx    # Acessibilidade (fonte, contraste, voz pt-BR)
 │   │   ├── trails/
 │   │   │   ├── index.tsx        # Lista de trilhas
 │   │   │   ├── [trailId].tsx    # Detalhes da trilha + lista de lições
@@ -365,27 +368,37 @@ finEdu/
 │   └── onboarding/
 │       └── avatar-select.tsx
 ├── components/
+│   ├── accessibility/
+│   │   ├── AccessibleText.tsx
+│   │   └── ListenButton.tsx
 │   ├── slides/
 │   │   ├── NarrativeSlide.tsx
 │   │   ├── DecisionSlide.tsx
 │   │   ├── ConsequenceSlide.tsx
 │   │   └── XPRewardSlide.tsx
 │   ├── gamification/
-│   │   ├── XPBar.tsx
-│   │   ├── LevelBadge.tsx
 │   │   └── LevelUpModal.tsx
-│   └── Avatar.tsx
+│   └── ui/
+│       └── OfflineBanner.tsx
+├── hooks/
+│   └── useSpeech.ts             # TTS pt-BR (Expo Speech / Web Speech API)
 ├── services/
-│   ├── firebase.ts              # Inicialização Firebase
+│   ├── firebase.ts              # Inicialização Firebase (Auth + Firestore)
 │   ├── auth.service.ts
 │   ├── trail.service.ts
 │   └── progress.service.ts
 ├── store/
-│   └── useUserStore.ts          # Zustand: sessão, XP, nível
+│   ├── useUserStore.ts          # Zustand: sessão, XP, nível, progresso
+│   └── useAccessibilityStore.ts # Zustand + AsyncStorage: preferências offline
 ├── types/
 │   └── index.ts                 # Trail, Lesson, Slide, User types
+├── utils/
+│   └── alert.ts                 # Alertas multiplataforma (web + mobile)
 └── constants/
-    └── levels.ts                # Tabela de níveis (fallback local)
+    ├── avatars.ts               # Avatares e evolução visual (variantes 1–5)
+    ├── lessons.ts               # Fallback offline alinhado ao Firestore
+    ├── levels.ts                # Tabela de níveis (0–550 XP)
+    └── theme.ts                 # Tokens de cor (padrão AA + alto contraste AAA)
 ```
 
 ---
@@ -493,6 +506,11 @@ service cloud.firestore {
 - **Dado** que o usuário fez login anteriormente
 - **Quando** fecha e reabre o app
 - **Então** é redirecionado diretamente para a Home, sem passar pelo login ou onboarding
+
+### CA-07: Acessibilidade e Leitura em Voz Alta
+- **Dado** que o usuário ativou alto contraste, texto grande/extra grande ou leitura automática em `/accessibility`
+- **Quando** navega pelo app ou executa uma lição
+- **Então** os textos e botões respeitam o contraste (WCAG AA no padrão, AAA no alto contraste) e a escala escolhida, todos os slides podem ser ouvidos em `pt-BR` com `🔊 Ouvir`, e as preferências permanecem salvas após recarregar o app (inclusive offline)
 
 ---
 

@@ -11,6 +11,7 @@ import { onAuthChange, fetchUserProfile } from '@/services/auth.service';
 import { getUserProgress } from '@/services/progress.service';
 import { useUserStore } from '@/store/useUserStore';
 import { useAppTheme } from '@/constants/theme';
+import OfflineBanner from '@/components/ui/OfflineBanner';
 import '../global.css';
 
 export default function RootLayout() {
@@ -110,6 +111,7 @@ export default function RootLayout() {
   const stack = (
     <>
       <StatusBar style="light" />
+      <OfflineBanner />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="onboarding" />

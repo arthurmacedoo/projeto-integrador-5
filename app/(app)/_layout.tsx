@@ -28,7 +28,7 @@ export default function AppLayout() {
           height: 46 + fs(14),
           paddingBottom: 8,
         },
-        tabBarActiveTintColor: colors.primary,
+        tabBarActiveTintColor: colors.primaryText,
         tabBarInactiveTintColor: colors.textFaint,
         tabBarLabelStyle: { fontSize: fs(11), fontWeight: '600' },
       }}

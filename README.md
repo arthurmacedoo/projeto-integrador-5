@@ -25,9 +25,10 @@ Funciona direto no navegador do celular ou do computador — sem precisar instal
 | :--- | :--- |
 | **Front-end / Mobile** | React Native + Expo (SDK 57) + Expo Router |
 | **Linguagem** | TypeScript |
-| **Estilização** | NativeWind (Tailwind CSS) |
-| **Estado** | Zustand |
-| **Back-end** | Firebase (Authentication e Cloud Firestore) |
+| **Estilização & Tema** | StyleSheet + Tokens de Tema Acessíveis (`constants/theme.ts`, alto contraste WCAG AAA) |
+| **Acessibilidade & Voz** | Expo Speech / Web Speech API (`pt-BR`), escala de fonte e navegação por teclado |
+| **Estado** | Zustand + AsyncStorage |
+| **Back-end** | Firebase (Authentication e Cloud Firestore com cache offline) |
 | **Publicação Web** | GitHub Pages |
 
 ---

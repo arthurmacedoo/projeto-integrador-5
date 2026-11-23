@@ -1,12 +1,13 @@
 // app/(app)/accessibility.tsx
 // Tela "Acessibilidade" — aberta pelo botão na tela de Perfil.
 // Fica fora da bottom-bar (href: null em app/(app)/_layout.tsx).
+import { useEffect } from 'react';
 import { Platform, Pressable, ScrollView, Switch, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import AccessibleText from '@/components/accessibility/AccessibleText';
 import ListenButton from '@/components/accessibility/ListenButton';
 import { useAppTheme } from '@/constants/theme';
-import { usePortugueseVoices, speakSample } from '@/hooks/useSpeech';
+import { usePortugueseVoices, speakSample, stopSpeech } from '@/hooks/useSpeech';
 import {
   useAccessibilityStore,
   FontScale,
@@ -40,7 +41,7 @@ function OptionGroup<T extends string>({
   const { colors } = useAppTheme();
   return (
     <View style={{ gap: 12 }}>
-      <AccessibleText variant="title" accessibilityRole="header">
+      <AccessibleText variant="title" accessibilityRole="header" aria-level={2}>
         {title}
       </AccessibleText>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }} accessibilityRole="radiogroup">
@@ -102,6 +103,9 @@ function SwitchRow({
         accessibilityHint={description}
         trackColor={{ false: colors.border, true: colors.primary }}
         thumbColor={value ? colors.onPrimary : '#cbd5e1'}
+        {...(Platform.OS === 'web'
+          ? ({ activeThumbColor: colors.onPrimary } as Record<string, unknown>)
+          : {})}
       />
     </View>
   );
@@ -124,6 +128,9 @@ export default function AccessibilityScreen() {
     setVoiceId,
     reset,
   } = useAccessibilityStore();
+
+  // Para qualquer amostra de voz (velocidade/voz) ao sair da tela de Acessibilidade
+  useEffect(() => () => stopSpeech(), []);
 
   // Ao escolher velocidade ou voz, já fala uma frase de exemplo — o usuário ouve a diferença na hora.
   const SPEED_SAMPLE: Record<SpeechSpeed, string> = {
@@ -267,7 +274,7 @@ export default function AccessibilityScreen() {
         accessibilityLabel="Restaurar configurações padrão de acessibilidade"
         style={{ minHeight: 48, justifyContent: 'center', alignItems: 'center' }}
       >
-        <AccessibleText bold style={{ color: colors.primary, textDecorationLine: 'underline' }}>
+        <AccessibleText bold style={{ color: colors.primaryText, textDecorationLine: 'underline' }}>
           Restaurar padrão
         </AccessibleText>
       </Pressable>

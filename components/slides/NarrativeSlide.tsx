@@ -20,7 +20,10 @@ const CHARACTER_ICONS: Record<string, { emoji: string; name: string }> = {
 export default function NarrativeSlide({ slide }: Props) {
   const { colors } = useAppTheme();
   const char = CHARACTER_ICONS[slide.character] ?? { emoji: '💬', name: 'Cenário' };
-  const spokenText = `${char.name}. ${slide.text}`;
+  const trimmed = slide.text.trim();
+  // Evita repetir "João. João está..." quando o texto já começa com o nome do personagem
+  const startsWithChar = trimmed.toLowerCase().startsWith(char.name.toLowerCase());
+  const spokenText = startsWithChar ? trimmed : `${char.name}. ${trimmed}`;
 
   useAutoRead(spokenText);
 

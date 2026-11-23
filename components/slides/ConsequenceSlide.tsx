@@ -16,9 +16,17 @@ export default function ConsequenceSlide({ slide }: Props) {
   const statusColor = isNegative ? colors.danger : colors.success;
   const statusLabel = isNegative ? 'CUIDADO: DECISÃO ARRISCADA' : 'EXCELENTE DECISÃO!';
 
-  const spokenText =
-    `${isNegative ? 'Cuidado, decisão arriscada.' : 'Excelente decisão!'} ${slide.text}` +
-    (slide.tip ? ` Dica do Guardião: ${slide.tip}` : '');
+  const trimmed = slide.text.trim();
+  // Evita repetir "Excelente decisão! Excelente decisão!" ou "Cuidado... Cuidado..."
+  const alreadyHasLead = isNegative
+    ? /^cuidado\b/i.test(trimmed)
+    : /^excelente\b/i.test(trimmed);
+  const lead = alreadyHasLead
+    ? ''
+    : isNegative
+      ? 'Cuidado, decisão arriscada. '
+      : 'Excelente decisão! ';
+  const spokenText = `${lead}${trimmed}${slide.tip ? ` Dica do Guardião: ${slide.tip}` : ''}`;
 
   useAutoRead(spokenText);
 

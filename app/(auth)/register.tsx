@@ -25,11 +25,16 @@ export default function RegisterScreen() {
   const [name, setName]         = useState('');
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
+  const [showPass, setShowPass] = useState(false);
   const [loading, setLoading]   = useState(false);
 
   async function handleRegister() {
     if (!name.trim() || !email.trim() || !password) {
       showAlert('Atenção', 'Preencha todos os campos.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      showAlert('Atenção', 'Digite um endereço de e-mail válido.');
       return;
     }
     if (password.length < 8) {
@@ -53,7 +58,13 @@ export default function RegisterScreen() {
       const msg =
         err.code === 'auth/email-already-in-use'
           ? 'Este e-mail já está cadastrado.'
-          : 'Erro ao criar conta. Tente novamente.';
+          : err.code === 'auth/invalid-email'
+            ? 'Digite um endereço de e-mail válido.'
+            : err.code === 'auth/weak-password'
+              ? 'Escolha uma senha mais forte (mínimo 8 caracteres).'
+              : err.code === 'auth/network-request-failed'
+                ? 'Sem conexão com a internet. Verifique sua rede e tente novamente.'
+                : 'Erro ao criar conta. Tente novamente.';
       showAlert('Erro', msg);
     } finally {
       setLoading(false);
@@ -66,7 +77,10 @@ export default function RegisterScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 24 }}>
-        <Text style={{ fontSize: fs(28), fontWeight: 'bold', color: colors.textStrong, marginBottom: 6 }}>
+        <Text
+          accessibilityRole="header"
+          style={{ fontSize: fs(28), fontWeight: 'bold', color: colors.textStrong, marginBottom: 6 }}
+        >
           Criar conta 🚀
         </Text>
         <Text style={{ fontSize: fs(14), color: colors.textMuted, marginBottom: 32 }}>
@@ -81,11 +95,13 @@ export default function RegisterScreen() {
           placeholder="Como podemos te chamar?"
           placeholderTextColor={colors.textFaint}
           autoCapitalize="words"
+          accessibilityLabel="Nome"
           style={{
             backgroundColor: colors.surface,
             ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
             borderRadius: 12,
             padding: 14,
+            minHeight: 48,
             color: colors.textStrong,
             marginBottom: 16,
             fontSize: fs(16),
@@ -101,45 +117,74 @@ export default function RegisterScreen() {
           placeholderTextColor={colors.textFaint}
           keyboardType="email-address"
           autoCapitalize="none"
+          accessibilityLabel="E-mail"
           style={{
             backgroundColor: colors.surface,
             ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
             borderRadius: 12,
             padding: 14,
+            minHeight: 48,
             color: colors.textStrong,
             marginBottom: 16,
             fontSize: fs(16),
           }}
         />
 
-        {/* Campo Senha */}
+        {/* Campo Senha (com opção de visualização — PRD E1.F1) */}
         <Text style={{ color: colors.textSoft, marginBottom: 6, fontSize: fs(14) }}>Senha</Text>
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Mínimo 8 caracteres"
-          placeholderTextColor={colors.textFaint}
-          secureTextEntry
-          style={{
-            backgroundColor: colors.surface,
-            ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
-            borderRadius: 12,
-            padding: 14,
-            color: colors.textStrong,
-            marginBottom: 28,
-            fontSize: fs(16),
-          }}
-        />
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 28 }}>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Mínimo 8 caracteres"
+            placeholderTextColor={colors.textFaint}
+            secureTextEntry={!showPass}
+            accessibilityLabel="Senha"
+            style={{
+              flex: 1,
+              backgroundColor: colors.surface,
+              ...(highContrast && { borderWidth: 1, borderColor: colors.border }),
+              borderRadius: 12,
+              padding: 14,
+              paddingRight: 52,
+              minHeight: 48,
+              color: colors.textStrong,
+              fontSize: fs(16),
+            }}
+          />
+          <TouchableOpacity
+            onPress={() => setShowPass(!showPass)}
+            accessibilityRole="button"
+            accessibilityLabel={showPass ? 'Ocultar senha' : 'Mostrar senha'}
+            style={{
+              position: 'absolute',
+              right: 4,
+              minWidth: 48,
+              minHeight: 48,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ color: colors.textSubtle, fontSize: fs(18) }} importantForAccessibility="no">
+              {showPass ? '🙈' : '👁️'}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Botão Cadastrar */}
         <TouchableOpacity
           onPress={handleRegister}
           disabled={loading}
+          accessibilityRole="button"
+          accessibilityLabel="Criar conta"
+          accessibilityState={{ disabled: loading }}
           style={{
             backgroundColor: colors.primary,
             borderRadius: 14,
             padding: 16,
+            minHeight: 52,
             alignItems: 'center',
+            justifyContent: 'center',
             opacity: loading ? 0.7 : 1,
           }}
         >

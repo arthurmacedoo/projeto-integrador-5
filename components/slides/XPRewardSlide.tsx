@@ -3,25 +3,37 @@ import { View, Text } from 'react-native';
 import { useAppTheme } from '@/constants/theme';
 import { useAutoRead } from '@/hooks/useSpeech';
 import AccessibleText from '@/components/accessibility/AccessibleText';
+import ListenButton from '@/components/accessibility/ListenButton';
 
 interface Props {
   xpEarned: number;
   isCorrect: boolean;
+  alreadyCompleted?: boolean;
 }
 
-export default function XPRewardSlide({ xpEarned, isCorrect }: Props) {
-  const { colors, highContrast } = useAppTheme();
-  const title = isCorrect ? 'Lição Concluída com Sucesso!' : 'Lição Finalizada!';
-  const message = isCorrect
-    ? 'Você tomou a decisão certa e protegeu seu patrimônio!'
-    : 'Errar faz parte do aprendizado. O importante é estar preparado na vida real!';
+export default function XPRewardSlide({ xpEarned, isCorrect, alreadyCompleted = false }: Props) {
+  const { colors } = useAppTheme();
+  const title = alreadyCompleted
+    ? 'Lição Revisada!'
+    : isCorrect
+      ? 'Lição Concluída com Sucesso!'
+      : 'Lição Finalizada!';
+  const message = alreadyCompleted
+    ? 'Excelente revisão! Você já conquistou o XP desta lição anteriormente.'
+    : isCorrect
+      ? 'Você tomou a decisão certa e protegeu seu patrimônio!'
+      : 'Errar faz parte do aprendizado. O importante é estar preparado na vida real!';
 
-  useAutoRead(`${title} ${message} Você ganhou ${xpEarned} pontos de experiência.`);
+  const spokenText = alreadyCompleted
+    ? `${title} ${message}`
+    : `${title} ${message} Você ganhou ${xpEarned} pontos de experiência.`;
+
+  useAutoRead(spokenText);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 64, marginBottom: 16 }} importantForAccessibility="no">
-        {isCorrect ? '🏆' : '📚'}
+        {alreadyCompleted ? '🔄' : isCorrect ? '🏆' : '📚'}
       </Text>
 
       <AccessibleText
@@ -39,7 +51,11 @@ export default function XPRewardSlide({ xpEarned, isCorrect }: Props) {
       {/* Badge de Recompensa de XP */}
       <View
         accessible
-        accessibilityLabel={`Recompensa: mais ${xpEarned} pontos de experiência`}
+        accessibilityLabel={
+          alreadyCompleted
+            ? 'Lição revisada, XP já conquistado anteriormente'
+            : `Recompensa: mais ${xpEarned} pontos de experiência`
+        }
         style={{
           backgroundColor: colors.surface,
           borderRadius: 24,
@@ -47,15 +63,30 @@ export default function XPRewardSlide({ xpEarned, isCorrect }: Props) {
           paddingHorizontal: 36,
           alignItems: 'center',
           borderWidth: 2,
-          borderColor: colors.warningBase,
+          borderColor: alreadyCompleted ? colors.primary : colors.warningBase,
         }}
       >
-        <AccessibleText variant="caption" bold style={{ color: colors.warning, marginBottom: 4 }}>
-          XP RECOMPENSA
+        <AccessibleText
+          variant="caption"
+          bold
+          style={{ color: alreadyCompleted ? colors.primaryText : colors.warning, marginBottom: 4 }}
+        >
+          {alreadyCompleted ? 'REVISÃO CONCLUÍDA' : 'XP RECOMPENSA'}
         </AccessibleText>
-        <Text style={{ color: colors.warning, fontSize: 40, fontWeight: 'bold' }}>
-          +{xpEarned} XP
+        <Text
+          style={{
+            color: alreadyCompleted ? colors.primaryText : colors.warning,
+            fontSize: alreadyCompleted ? 24 : 40,
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          {alreadyCompleted ? 'XP já conquistado' : `+${xpEarned} XP`}
         </Text>
+      </View>
+
+      <View style={{ alignSelf: 'center' }}>
+        <ListenButton text={spokenText} />
       </View>
     </View>
   );

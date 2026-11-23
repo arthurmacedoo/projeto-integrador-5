@@ -4,7 +4,7 @@
 // ──────────────────────────────────────────────────────────────
 import { create } from 'zustand';
 import type { User, LevelUpResult, ProgressEntry } from '@/types';
-import { getLevelForXP, getNextLevel } from '@/constants/levels';
+import { getLevelForXP } from '@/constants/levels';
 import {
   completeLesson,
   updateUserXPAndLevel,

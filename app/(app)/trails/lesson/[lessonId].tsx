@@ -30,6 +30,7 @@ export default function LessonRunnerScreen() {
   const [levelUpData, setLevelUpData] = useState<LevelUpResult | null>(null);
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [finishing, setFinishing] = useState(false);
+  const [wasCompletedOnOpen, setWasCompletedOnOpen] = useState(false);
 
   function navigateBackToTrail() {
     if (trailId) {
@@ -53,6 +54,7 @@ export default function LessonRunnerScreen() {
       setSelectedOption(null);
       setLevelUpData(null);
       setShowLevelUp(false);
+      setWasCompletedOnOpen(useUserStore.getState().isLessonCompleted(lessonId));
       try {
         // trailId pode faltar se a página for recarregada com um link incompleto
         const data = await getLesson(trailId ?? 'trail_golpes', lessonId);
@@ -190,37 +192,55 @@ export default function LessonRunnerScreen() {
           )}
 
           {currentSlide.type === 'xp_reward' && (
-            <XPRewardSlide xpEarned={xpEarned} isCorrect={isCorrect} />
+            <XPRewardSlide
+              xpEarned={xpEarned}
+              isCorrect={isCorrect}
+              alreadyCompleted={wasCompletedOnOpen}
+            />
           )}
         </ScrollView>
 
         {/* Botão de Avanço */}
-        <TouchableOpacity
-          onPress={handleNext}
-          disabled={(currentSlide.type === 'decision' && !selectedOption) || finishing}
-          accessibilityRole="button"
-          accessibilityLabel={isLastSlide ? 'Finalizar lição' : 'Continuar'}
-          accessibilityHint={currentSlide.type === 'decision' && !selectedOption ? 'Escolha uma opção primeiro' : undefined}
-          accessibilityState={{ disabled: (currentSlide.type === 'decision' && !selectedOption) || finishing }}
-          aria-disabled={(currentSlide.type === 'decision' && !selectedOption) || finishing}
-          style={{
-            backgroundColor:
-              currentSlide.type === 'decision' && !selectedOption ? colors.surface : colors.primary,
-            borderRadius: 16,
-            paddingVertical: 18,
-            alignItems: 'center',
-            opacity: currentSlide.type === 'decision' && !selectedOption ? 0.5 : 1,
-            marginTop: 16,
-          }}
-        >
-          {finishing ? (
-            <ActivityIndicator color={colors.onPrimary} />
-          ) : (
-            <Text maxFontSizeMultiplier={1.4} style={{ color: colors.onPrimary, fontWeight: 'bold', fontSize: fontSize('body') }}>
-              {isLastSlide ? 'Finalizar Lição 🏆' : 'Continuar ➔'}
-            </Text>
-          )}
-        </TouchableOpacity>
+        {(() => {
+          const isDecisionPending = currentSlide.type === 'decision' && !selectedOption;
+          const isDisabled = isDecisionPending || finishing;
+          return (
+            <TouchableOpacity
+              onPress={handleNext}
+              disabled={isDisabled}
+              accessibilityRole="button"
+              accessibilityLabel={isLastSlide ? 'Finalizar lição' : 'Continuar'}
+              accessibilityHint={isDecisionPending ? 'Escolha uma opção primeiro' : undefined}
+              accessibilityState={{ disabled: isDisabled }}
+              aria-disabled={isDisabled}
+              style={{
+                backgroundColor: isDecisionPending ? colors.surface : colors.primary,
+                borderRadius: 16,
+                borderWidth: isDecisionPending && highContrast ? 2 : 0,
+                borderColor: colors.border,
+                paddingVertical: 18,
+                alignItems: 'center',
+                opacity: isDecisionPending ? (highContrast ? 0.85 : 0.65) : 1,
+                marginTop: 16,
+              }}
+            >
+              {finishing ? (
+                <ActivityIndicator color={colors.onPrimary} />
+              ) : (
+                <Text
+                  maxFontSizeMultiplier={1.4}
+                  style={{
+                    color: isDecisionPending ? colors.textMuted : colors.onPrimary,
+                    fontWeight: 'bold',
+                    fontSize: fontSize('body'),
+                  }}
+                >
+                  {isLastSlide ? 'Finalizar Lição 🏆' : 'Continuar ➔'}
+                </Text>
+              )}
+            </TouchableOpacity>
+          );
+        })()}
 
         {/* Modal de Level Up */}
         <LevelUpModal
