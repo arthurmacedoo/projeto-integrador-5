@@ -1,16 +1,22 @@
 // scripts/seed.mjs
 // Script para popular o Firestore com os 5 níveis e as 8 lições da Trilha Golpes Pix/WhatsApp
+// Uso: node --env-file=.env scripts/seed.mjs
 import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "REMOVED_API_KEY",
-  authDomain: "finedu-app-f4087.firebaseapp.com",
-  projectId: "finedu-app-f4087",
-  storageBucket: "finedu-app-f4087.firebasestorage.app",
-  messagingSenderId: "291439180019",
-  appId: "1:291439180019:web:2376f8607bc454a5d81f86"
+  apiKey:            process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain:        process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId:         process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket:     process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId:             process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
+
+if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+  console.error('❌ Variáveis do Firebase não encontradas. Crie o arquivo .env a partir de .env.example e rode: node --env-file=.env scripts/seed.mjs');
+  process.exit(1);
+}
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

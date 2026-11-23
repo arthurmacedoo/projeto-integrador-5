@@ -64,7 +64,7 @@ export default function AvatarSelectScreen() {
                 backgroundColor: isSelected ? colors.surfaceSelected : colors.surface,
                 borderRadius: 16,
                 borderWidth: 2,
-                borderColor: isSelected ? colors.primary : 'transparent',
+                borderColor: isSelected ? colors.primary : (highContrast ? colors.border : 'transparent'),
                 justifyContent: 'center',
                 alignItems: 'center',
               }}

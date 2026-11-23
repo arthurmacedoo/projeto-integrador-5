@@ -159,9 +159,9 @@ export default function AccessibilityScreen() {
       contentContainerStyle={{ padding: 24, paddingTop: 56, gap: 28 }}
     >
       <Pressable
-        onPress={() => router.back()}
+        onPress={() => router.push('/(app)/profile')}
         accessibilityRole="button"
-        accessibilityLabel="Voltar"
+        accessibilityLabel="Voltar para Perfil"
         hitSlop={12}
         style={{ minHeight: 48, justifyContent: 'center', alignSelf: 'flex-start' }}
       >
